@@ -8,7 +8,7 @@ Screen2D mainScreen;
 
 
 void setup() {
-  size(960, 540);
+  size(960, 540, P2D);
   mainUi = new LazyGui(this);
   
 
