@@ -38,7 +38,6 @@
                   "type": "TRANSIENT"
                 }
               ],
-              "window": {},
               "className": "RadioFolderNode",
               "path": "options/themes/preset",
               "type": "FOLDER"
@@ -289,13 +288,11 @@
                   "type": "VALUE"
                 }
               ],
-              "window": {},
               "className": "ColorPickerFolderNode",
               "path": "options/themes/window border",
               "type": "FOLDER"
             }
           ],
-          "window": {},
           "className": "FolderNode",
           "path": "options/themes",
           "type": "FOLDER"
@@ -754,7 +751,6 @@
           "type": "FOLDER"
         }
       ],
-      "window": {},
       "className": "FolderNode",
       "path": "options",
       "type": "FOLDER"
@@ -809,9 +805,13 @@
           "className": "FolderNode",
           "path": "saves/autosave rules",
           "type": "FOLDER"
+        },
+        {
+          "className": "SaveItemNode",
+          "path": "saves/auto",
+          "type": "TRANSIENT"
         }
       ],
-      "window": {},
       "className": "SaveFolderNode",
       "path": "saves",
       "type": "FOLDER"

@@ -22,7 +22,7 @@ public class Grid3D {
     for (int i=0; i<res; i++) {
       for (int j=0; j<res; j++) {
         for (int k=0; k<res; k++) {
-          grid[i][j][k] = new Cell(size/res);
+          grid[i][j][k] = new Cell(new PVector(i*size/res, j*size/res, k*size/res), size/res);
         }
       }
     }
@@ -33,7 +33,11 @@ public class Grid3D {
   public void changeSize() {
   }
   
-  public Cell getCell(int x, int y, int z) {
+  public void setCell(int x, int y, int z, Cell newCell) {
+    grid[z][y][x] = newCell;
+  }
+  
+  public Cell getCell(int x, int y, int z) { 
     return grid[z][y][x];
   }
   
