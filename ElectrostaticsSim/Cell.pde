@@ -1,26 +1,31 @@
 
 public class Cell {
   /* size length of the cell in units */
-  private int size;
+  private float size;
+  /* cosmetics */
   private color colr;
-  private PVector pos;
+  /* position of center */
+  private PVector centerPos;
   
   /* constructors */
-  public Cell(PVector initPos, int initSize) {
-    this(initPos, initSize, color(255));
+  public Cell(PVector initCenterPos, float initSize) {
+    this(initCenterPos, initSize, color(255));
   }
   
-  public Cell(PVector initPos, int initSize, color initColr) {
-    pos = initPos;
+  public Cell(PVector initCenterPos, float initSize, color initColr) {
+    centerPos = initCenterPos;
     size = initSize;
-    colr = initColr;
+    colr = initColr; 
   }
   
   
   /* modifier methods */
   
-  public void changeSize(int newSize) {
+  public void changeSize(float newSize) {
+    /* also changes the centerPos */
+    float scale = newSize/size;
     size = newSize;
+    centerPos.mult(scale);
   }
   
   public void changeColor(color newColor) {
@@ -29,12 +34,16 @@ public class Cell {
   
   /* accessor methods */
   
-  public int getSize() {
+  public float getSize() {
     return size;
   }
   
   public color getColor() {
     return colr;
+  }
+  
+  public PVector getCenterPos() {
+    return centerPos;
   }
   
 }
