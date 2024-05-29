@@ -30,7 +30,7 @@ public void setup() {
   mainUi = new ControlP5(this);
   //mainScreen2D = new Screen2D(this, mainSlicer);
   mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
-  //mainObjectUi = new ObjectUi(this);
+  mainObjectUi = new ObjectUi(this);
   
   /* fun */
   backGroundImg = loadImage("greenFN.jpg");

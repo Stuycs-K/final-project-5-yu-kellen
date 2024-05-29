@@ -18,7 +18,6 @@ public class Cell {
     colr = initColr; 
   }
   
-  
   /* modifier methods */
   
   public void changeSize(float newSize) {
