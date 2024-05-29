@@ -1,5 +1,7 @@
 import controlP5.*;
 
+int simulationRes;
+
 Grid3D mainGrid;
 Slicer mainSlicer;
 
@@ -28,9 +30,9 @@ public void setup() {
 
   /* init ui */
   mainUi = new ControlP5(this);
-  //mainScreen2D = new Screen2D(this, mainSlicer);
+  mainScreen2D = new Screen2D(this, 5);
   mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
-  mainObjectUi = new ObjectUi(this);
+  //mainObjectUi = new ObjectUi(this);
   
   /* fun */
   backGroundImg = loadImage("greenFN.jpg");

@@ -11,8 +11,11 @@ public class SlicerUi extends PApplet{
   private RadioButton sliceModeSel;
   private char sliceMode;
 
-  private CheckBox renderModeSel;
+  private RadioButton renderModeSel;
   private char renderMode;
+  
+  private RadioButton gridModeSel;
+  private char gridMode;
   
   private Slider indexSlider;
   private int sliceIndex;
@@ -54,9 +57,9 @@ public class SlicerUi extends PApplet{
                 .setPosition(50, 25)
                 .setItemWidth(20)
                 .setItemHeight(20)
-                .addItem("XY", 'z')
-                .addItem("XZ", 'y')
-                .addItem("YZ", 'x');
+                .addItem("slice by row", 'i')
+                .addItem("slice by col", 'j')
+                .addItem("slice by layer", 'k');
                 
     /* edit fonts */
     for (Toggle t : sliceModeSel.getItems()) {
@@ -70,7 +73,7 @@ public class SlicerUi extends PApplet{
                     .setFont(fontMap.get("p"));
                     
                     
-     renderModeSel = ui.addCheckBox("renderMode")
+     renderModeSel = ui.addRadioButton("lineMode")
                 .setPosition(50, 150)
                 .setItemWidth(20)
                 .setItemHeight(20)
@@ -78,8 +81,8 @@ public class SlicerUi extends PApplet{
                 .addItem("Field Lines", 'l')
                 .addItem("Potential", 'p')
                 .addItem("Charge", 'c')
-                .addItem("Equipotential Lines", 'e')
-                .addItem("Gridlines", 'g');
+                .addItem("Equipotential Lines", 'e');
+                
                 
      for (Toggle t : renderModeSel.getItems()) {
       t.getCaptionLabel().setFont(fontMap.get("p"));

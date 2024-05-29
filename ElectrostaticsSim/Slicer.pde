@@ -8,35 +8,35 @@ public class Slicer {
   
   /*
   Mode:
-   'x' render yz, h = x
-   'y' render xz, h = y
-   'z' render xy, h = z
+   'i' render jk, select by row
+   'j' render ik, select by column
+   'k' render ij, select by layer
    */
   public Cell[][] getSlice(char mode, int index) {
     int res = grid.getRes();
     Cell[][] out = new Cell[res][res];
     switch (mode) {
-      /* yz */
-      case 'x':
-        for (int j=0; j<res; j++) {
-          for (int k=0; k<res; k++) {
-            out[j][k] = grid.getCell(index, j, k);
-          }
-        }
-        break;
-      /* xz */
-      case 'y':
+      /* jk */
+      case 'i':
         for (int k=0; k<res; k++) {
-          for (int i=0; i<res; i++) {
-            out[k][i] = grid.getCell(i, index, k);
+          for (int j=0; j<res; j++) {
+            out[k][j] = grid.getCell(index, j, k);
           }
         }
         break;
-      /* xy */
-      case 'z':
-        for (int j=0; j<res; j++) {
-          for (int i=0; i<res; i++) {
-            out[j][i] = grid.getCell(i, j, index);
+      /* ik */
+      case 'j':
+        for (int i=0; i<res; i++) {
+          for (int k=0; k<res; k++) {
+            out[i][k] = grid.getCell(i, index, k);
+          }
+        }
+        break;
+      /* ij */
+      case 'k':
+        for (int i=0; i<res; i++) {
+          for (int j=0; j<res; j++) {
+            out[i][j] = grid.getCell(i, j, index);
           }
         }
         break;

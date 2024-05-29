@@ -33,12 +33,12 @@ public class Grid3D {
   public void changeSize() {
   }
   
-  public void setCell(int x, int y, int z, Cell newCell) {
-    grid[z][y][x] = newCell;
+  public void setCell(int i, int j, int k, Cell newCell) {
+    grid[i][j][k] = newCell;
   }
   
-  public Cell getCell(int x, int y, int z) { 
-    return grid[z][y][x];
+  public Cell getCell(int i, int j, int k) { 
+    return grid[i][j][k];
   }
   
   public int getRes() {
