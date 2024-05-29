@@ -1,7 +1,7 @@
 
 public class Slicer {
   private Grid3D grid;
-
+  
   public Slicer(Grid3D initGrid) {
     grid = initGrid;
   }
@@ -44,6 +44,10 @@ public class Slicer {
         break;
     }
     return out;
+  }
+  
+  public int getRes() {
+    return grid.getRes();
   }
   
 }

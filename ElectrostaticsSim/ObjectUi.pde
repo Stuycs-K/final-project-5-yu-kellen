@@ -1,16 +1,14 @@
 import controlP5.*;
 
-public class Screen2D extends PApplet{
+public class ObjectUi extends PApplet{
   private PApplet parent;
   private ControlP5 ui;
   
-  private Slicer slicer;
   
   /* constructors */
-  public Screen2D(PApplet initParent, Slicer initSlicer) {
+  public ObjectUi(PApplet initParent) {
     super();
     parent = initParent;
-    slicer = initSlicer;
     PApplet.runSketch(new String[]{this.getClass().getName()}, this);
   }
   
