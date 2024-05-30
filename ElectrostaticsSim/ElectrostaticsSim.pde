@@ -37,15 +37,15 @@ public void setup() {
   //mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
   //mainObjectUi = new ObjectUi(this);
   
-  mainGrid = new Grid3D(2, 1);
-  for (int i=1; i<4; i++) {
-    for (int j=1; j<4; j++) {
-      for (int k=1; k<4; k++) {
-        mainGrid.getInitCell(i, j, k).setCharge(Double.valueOf(0));
+  mainGrid = new Grid3D(5, 0.01);
+  for (int i=1; i<6; i++) {
+    for (int j=1; j<6; j++) {
+      for (int k=1; k<6; k++) {
+        mainGrid.getInitCell(i, j, k).setPotential(Double.valueOf(0));
       }
     }
   }
-  //mainGrid.getInitCell(2, 2, 2).setCharge(Double.valueOf(10));
+  mainGrid.getInitCell(1, 1, 1).setCharge(Double.valueOf(10));
   
   mainGrid.solveSystem();
   

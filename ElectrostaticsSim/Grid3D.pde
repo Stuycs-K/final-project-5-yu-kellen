@@ -86,61 +86,87 @@ public class Grid3D {
     }
     
     /* init CoeffMatrix */
-    for (int p=0; p<cubeRes; p++) {
-      for (int i=0; i<realRes; i++) {
-        for (int j=0; j<realRes; j++) {
-          for (int k=0; k<realRes; k++) {
-            if ((i==0)||(j==0)||(k==0)||(i==res+1)||(j==res+1)||(k==res+1)) {
-              coeffMatrix.setEntry(p, getIndex(i, j, k), 1);
-              //System.out.println(i + ", " + j + ", " + k);
+    for (int i=0; i<realRes; i++) {
+      for (int j=0; j<realRes; j++) {
+        for (int k=0; k<realRes; k++) {
+          int index = getIndex(i, j, k);
+          if (swapTracker[index] == true) {
+            /* V */
+            coeffMatrix.setEntry(index, getIndex(i, j, k), 1/6);
+            /* V(i+d) */
+            if (i < res+1) {
+              coeffMatrix.setEntry(index, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
             }
-            else {
-              if (swapTracker[getIndex(i, j, k)] == true) {
-                /* V */
-                coeffMatrix.setEntry(p, getIndex(i, j, k), 1/6);
-                /* V(i+d) */
-                coeffMatrix.setEntry(p, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
-                /* V(i-d) */
-                coeffMatrix.setEntry(p, getIndex(i-1, j, k), solvedGrid[i-1][j][k].getPerm()/6);
-                /* V(j+d) */
-                coeffMatrix.setEntry(p, getIndex(i, j+1, k), solvedGrid[i][j+1][k].getPerm()/6);
-                /* V(j-d) */
-                coeffMatrix.setEntry(p, getIndex(i, j-1, k), solvedGrid[i][j-1][k].getPerm()/6);
-                /* V(k+d) */
-                coeffMatrix.setEntry(p, getIndex(i, j, k+1), solvedGrid[i][j][k+1].getPerm()/6);
-                /* V(k-d) */
-                coeffMatrix.setEntry(p, getIndex(i, j, k-1), solvedGrid[i][j][k-1].getPerm()/6);
-              }
-              else { 
-                /* V */
-                coeffMatrix.setEntry(p, getIndex(i, j, k), 6*solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
-                /* V(i+d) */
-                coeffMatrix.setEntry(p, getIndex(i+1, j, k), -solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i+1][j][k].getSize(), 2));
-                /* V(i-d) */
-                coeffMatrix.setEntry(p, getIndex(i-1, j, k), -solvedGrid[i-1][j][k].getPerm()/pow(solvedGrid[i-1][j][k].getSize(), 2));
-                /* V(j+d) */
-                coeffMatrix.setEntry(p, getIndex(i, j+1, k), -solvedGrid[i][j+1][k].getPerm()/pow(solvedGrid[i][j+1][k].getSize(), 2));
-                /* V(j-d) */
-                coeffMatrix.setEntry(p, getIndex(i, j-1, k), -solvedGrid[i][j-1][k].getPerm()/pow(solvedGrid[i][j-1][k].getSize(), 2));
-                /* V(k+d) */
-                coeffMatrix.setEntry(p, getIndex(i, j, k+1), -solvedGrid[i][j][k+1].getPerm()/pow(solvedGrid[i][j][k+1].getSize(), 2));
-                /* V(k-d) */
-                coeffMatrix.setEntry(p, getIndex(i, j, k-1), -solvedGrid[i][j][k-1].getPerm()/pow(solvedGrid[i][j][k-1].getSize(), 2));
-              }
+            /* V(i-d) */
+            if (i > 0) {
+              coeffMatrix.setEntry(index, getIndex(i-1, j, k), solvedGrid[i-1][j][k].getPerm()/6);
+            }
+            /* V(j+d) */
+            if (j < res+1) {
+              coeffMatrix.setEntry(index, getIndex(i, j+1, k), solvedGrid[i][j+1][k].getPerm()/6);
+            }
+            /* V(j-d) */
+            if (j > 0) {
+              coeffMatrix.setEntry(index, getIndex(i, j-1, k), solvedGrid[i][j-1][k].getPerm()/6);
+            }
+            /* V(k+d) */
+            if (k < res+1) {
+              coeffMatrix.setEntry(index, getIndex(i, j, k+1), solvedGrid[i][j][k+1].getPerm()/6);
+            }
+            /* V(k-d) */
+            if (k > 0) {
+              coeffMatrix.setEntry(index, getIndex(i, j, k-1), solvedGrid[i][j][k-1].getPerm()/6);
+            }
+          }
+          else { 
+            if ((i==0) && (j==0) && (k==0)) {
+              System.out.println("E");
+              System.out.println(getIndex(i, j, k+1));
+              //System.out.println(coeffMatrix.getEntry(p, getIndex(i, j, k)));
+              //coeffMatrix.setEntry(p, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
+              //System.out.println(coeffMatrix.getEntry(p, getIndex(i, j, k)));
+            }
+            /* V */
+            coeffMatrix.setEntry(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
+            /* V(i+d) */
+            if (i < res+1) {
+              coeffMatrix.setEntry(index, getIndex(i+1, j, k), -solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i+1][j][k].getSize(), 2));
+            }
+            /* V(i-d) */
+            if (i > 0) {
+              coeffMatrix.setEntry(index, getIndex(i-1, j, k), -solvedGrid[i-1][j][k].getPerm()/pow(solvedGrid[i-1][j][k].getSize(), 2));
+            }
+            /* V(j+d) */
+            if (j < res+1) {
+              coeffMatrix.setEntry(index, getIndex(i, j+1, k), -solvedGrid[i][j+1][k].getPerm()/pow(solvedGrid[i][j+1][k].getSize(), 2));
+            }
+            /* V(j-d) */
+            if (j > 0) {
+              coeffMatrix.setEntry(index, getIndex(i, j-1, k), -solvedGrid[i][j-1][k].getPerm()/pow(solvedGrid[i][j-1][k].getSize(), 2));
+            }
+            /* V(k+d) */
+            if (k < res+1) {
+              coeffMatrix.setEntry(index, getIndex(i, j, k+1), -solvedGrid[i][j][k+1].getPerm()/pow(solvedGrid[i][j][k+1].getSize(), 2));
+            }
+            /* V(k-d) */
+            if (k > 0) {
+              coeffMatrix.setEntry(index, getIndex(i, j, k-1), -solvedGrid[i][j][k-1].getPerm()/pow(solvedGrid[i][j][k-1].getSize(), 2));
             }
           }
         }
       }
     }
+  
     
    /* solve! */
-   RealMatrixFormat poob = new RealMatrixFormat();
+   RealMatrixFormat poob = new RealMatrixFormat("", "", "", "", "\n", " ");
    LUDecomposition amogus = new LUDecomposition(coeffMatrix);
    solver = amogus.getSolver();
    System.out.println(coeffMatrix.getRowDimension() + ", " + coeffMatrix.getColumnDimension());
    System.out.println(yVector.getDimension());
    //System.out.println(amogus.getQ());
    //System.out.println(yVector);
+   System.out.println(poob.format(coeffMatrix));
    System.out.println(solver.isNonSingular());
    
    
@@ -168,7 +194,7 @@ public class Grid3D {
     
     for (int i=0; i<realRes; i++) {
       for (int y=0; y<realRes; y++) {
-        charges[i][y] = (float)solvedGrid[i][2][y].getCharge().doubleValue();
+        charges[i][y] = (float)solvedGrid[i][1][y].getPotential().doubleValue();
       }
     }
     
