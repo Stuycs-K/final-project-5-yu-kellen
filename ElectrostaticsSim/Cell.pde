@@ -1,7 +1,7 @@
 
 public class Cell {
   /* size length of the cell in units */
-  private final static float pVacuum  = 8.8541878188 * pow(10, -12);
+  public static final float pVacuum = 8.8541878188E-12;
   private float size;
   private Double charge;
   private Double potential;
