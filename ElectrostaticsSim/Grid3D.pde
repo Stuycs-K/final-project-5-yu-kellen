@@ -92,9 +92,8 @@ public class Grid3D {
         for (int k=0; k<realRes; k++) {
           int index = getIndex(i, j, k);
           if (swapTracker[index] == true) {
-            System.out.println("WOW" + ", " + index);
             /* V */
-            coeffMatrix.setEntry(index, getIndex(i, j, k), 1/6);
+            coeffMatrix.setEntry(index, getIndex(i, j, k), 1/(6.0));
             /* V(i+d) */
             if (i < res+1) {
               coeffMatrix.setEntry(index, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
@@ -121,7 +120,6 @@ public class Grid3D {
             }
           }
           else { 
-            System.out.println(swapTracker[index
             /* V */
             coeffMatrix.setEntry(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
             /* V(i+d) */
@@ -155,12 +153,14 @@ public class Grid3D {
   
     
    /* solve! */
-   RealMatrixFormat poob = new RealMatrixFormat("", "", "", "", "\n", " ");
+   //RealMatrixFormat poob = new RealMatrixFormat("", "", "", "", "\n", " ");
    solver = new LUDecomposition(coeffMatrix).getSolver();
+   /*
    System.out.println(yVector.getDimension());
    System.out.println(coeffMatrix.getRowDimension() + ", " + coeffMatrix.getColumnDimension());
    System.out.println(Arrays.toString(swapTracker));
    System.out.println(poob.format(coeffMatrix));
+   */
    solnVector = solver.solve(yVector);
    
    
