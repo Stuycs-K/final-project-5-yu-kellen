@@ -73,6 +73,7 @@ public class Grid3D {
           solvedGrid[i][j][k] = initGrid[i][j][k];
           
           /* potential != null */
+          System.out.println(initGrid[i][j][k].getCharge());
           if (initGrid[i][j][k].getCharge() == null) {
             swapTracker[index] = true;
             yVector.setEntry(index, (-1)*initGrid[i][j][k].getPotential().doubleValue());
@@ -91,6 +92,7 @@ public class Grid3D {
         for (int k=0; k<realRes; k++) {
           int index = getIndex(i, j, k);
           if (swapTracker[index] == true) {
+            System.out.println("WOW" + ", " + index);
             /* V */
             coeffMatrix.setEntry(index, getIndex(i, j, k), 1/6);
             /* V(i+d) */
@@ -119,13 +121,7 @@ public class Grid3D {
             }
           }
           else { 
-            if ((i==0) && (j==0) && (k==0)) {
-              System.out.println("E");
-              System.out.println(getIndex(i, j, k+1));
-              //System.out.println(coeffMatrix.getEntry(p, getIndex(i, j, k)));
-              //coeffMatrix.setEntry(p, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
-              //System.out.println(coeffMatrix.getEntry(p, getIndex(i, j, k)));
-            }
+            System.out.println(swapTracker[index
             /* V */
             coeffMatrix.setEntry(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
             /* V(i+d) */
@@ -160,16 +156,11 @@ public class Grid3D {
     
    /* solve! */
    RealMatrixFormat poob = new RealMatrixFormat("", "", "", "", "\n", " ");
-   LUDecomposition amogus = new LUDecomposition(coeffMatrix);
-   solver = amogus.getSolver();
-   System.out.println(coeffMatrix.getRowDimension() + ", " + coeffMatrix.getColumnDimension());
+   solver = new LUDecomposition(coeffMatrix).getSolver();
    System.out.println(yVector.getDimension());
-   //System.out.println(amogus.getQ());
-   //System.out.println(yVector);
+   System.out.println(coeffMatrix.getRowDimension() + ", " + coeffMatrix.getColumnDimension());
+   System.out.println(Arrays.toString(swapTracker));
    System.out.println(poob.format(coeffMatrix));
-   System.out.println(solver.isNonSingular());
-   
-   
    solnVector = solver.solve(yVector);
    
    
