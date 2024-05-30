@@ -29,8 +29,8 @@ public class Grid3D {
           /* Boundary conditions */
           if ((i==0)||(j==0)||(k==0)||(i==res+1)||(j==res+1)||(k==res+1)) {
             initGrid[i][j][k] = new Cell(
-                                    new PVector(i*size/(res+2), j*size/(res+2), k*size/(res+2)), 
-                                    size/res,
+                                    new PVector(i*size, j*size, k*size), 
+                                    size,
                                     color(0),
                                     Double.valueOf(0),
                                     Double.valueOf(0),
@@ -40,8 +40,8 @@ public class Grid3D {
           }
           else {  
             initGrid[i][j][k] = new Cell(
-                                     new PVector(i*size/(res+2), j*size/(res+2), k*size/(res+2)), 
-                                     size/res
+                                     new PVector(i*size, j*size, k*size), 
+                                     size
                                      );
           }
         }
@@ -73,7 +73,7 @@ public class Grid3D {
           solvedGrid[i][j][k] = initGrid[i][j][k];
           
           /* potential != null */
-          System.out.println(initGrid[i][j][k].getCharge());
+          //System.out.println(initGrid[i][j][k].getCharge());
           if (initGrid[i][j][k].getCharge() == null) {
             swapTracker[index] = true;
             yVector.setEntry(index, (-1)*initGrid[i][j][k].getPotential().doubleValue());
@@ -180,17 +180,27 @@ public class Grid3D {
         }
       }
     }
-    System.out.println(realRes);
+    
+    
+    //System.out.println(realRes);
     float[][] charges = new float[realRes][realRes];
     
+    for (int k=0; k<realRes; k++) {
+      
     for (int i=0; i<realRes; i++) {
       for (int y=0; y<realRes; y++) {
-        charges[i][y] = (float)solvedGrid[i][1][y].getPotential().doubleValue();
+        charges[i][y] = (float)solvedGrid[i][k][y].getPotential().doubleValue();
       }
     }
     
-    System.out.println(Arrays.deepToString(charges));
-    
+    for (int i=0; i<realRes; i++) {
+      for (int y=0; y<realRes; y++) {
+        System.out.print(String.format("%03.3f ", charges[i][y]));
+      }
+      System.out.println();
+    }
+    System.out.println("\n" + k);
+    }
   }
   
 
