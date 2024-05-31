@@ -38,7 +38,7 @@ public void setup() {
   
   int iRes = 20;
   int jRes = 20;
-  int kRes = 1;
+  int kRes = 20;
   mainGrid = new Grid3D(iRes, jRes, kRes, 0.25);
   
   for (int i=1; i<iRes+1; i++) {

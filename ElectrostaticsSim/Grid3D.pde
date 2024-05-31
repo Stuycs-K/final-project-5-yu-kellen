@@ -1,4 +1,4 @@
-import org.jblas.*;
+import static jeigen.Shortcuts.*;
 import java.util.*;
 
 public class Grid3D {
@@ -60,9 +60,9 @@ public class Grid3D {
     solvedGrid = new Cell[iRes+2][jRes+2][kRes+2];
     
     /* potential is the main unknown quantity */
-    DoubleMatrix coeffMatrix = DoubleMatrix.zeros(cubeRes, cubeRes);
-    DoubleMatrix yVector = DoubleMatrix.zeros(cubeRes);
-    DoubleMatrix solnVector;
+    DenseMatrix coeffMatrix = zeros(cubeRes, cubeRes);
+    DenseMatrix yVector = zeros(cubeRes, 1);
+    DenseMatrix solnVector;
    
    /* tracks if charge and potential are swapped */
     boolean[] swapTracker = new boolean[cubeRes];
@@ -79,11 +79,11 @@ public class Grid3D {
           //System.out.println(initGrid[i][j][k].getCharge());
           if (initGrid[i][j][k].getCharge() == null) {
             swapTracker[index] = true;
-            yVector.put(index, (-1)*initGrid[i][j][k].getPotential().doubleValue());
+            yVector.set(index, (-1)*initGrid[i][j][k].getPotential().doubleValue());
           }
           else {
             swapTracker[index] = false;
-            yVector.put(index, initGrid[i][j][k].getCharge().doubleValue());
+            yVector.set(index, initGrid[i][j][k].getCharge().doubleValue());
           } 
         }
       }
@@ -99,58 +99,58 @@ public class Grid3D {
           int index = getIndex(i, j, k);
           if (swapTracker[index] == true) {
             /* V */
-            coeffMatrix.put(index, getIndex(i, j, k), 1/(6.0));
+            coeffMatrix.set(index, getIndex(i, j, k), 1/(6.0));
             /* V(i+d) */
             if (i < iRes+1) {
-              coeffMatrix.put(index, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
+              coeffMatrix.set(index, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
             }
             /* V(i-d) */
             if (i > 0) {
-              coeffMatrix.put(index, getIndex(i-1, j, k), solvedGrid[i-1][j][k].getPerm()/6);
+              coeffMatrix.set(index, getIndex(i-1, j, k), solvedGrid[i-1][j][k].getPerm()/6);
             }
             /* V(j+d) */
             if (j < jRes+1) {
-              coeffMatrix.put(index, getIndex(i, j+1, k), solvedGrid[i][j+1][k].getPerm()/6);
+              coeffMatrix.set(index, getIndex(i, j+1, k), solvedGrid[i][j+1][k].getPerm()/6);
             }
             /* V(j-d) */
             if (j > 0) {
-              coeffMatrix.put(index, getIndex(i, j-1, k), solvedGrid[i][j-1][k].getPerm()/6);
+              coeffMatrix.set(index, getIndex(i, j-1, k), solvedGrid[i][j-1][k].getPerm()/6);
             }
             /* V(k+d) */
             if (k < kRes+1) {
-              coeffMatrix.put(index, getIndex(i, j, k+1), solvedGrid[i][j][k+1].getPerm()/6);
+              coeffMatrix.set(index, getIndex(i, j, k+1), solvedGrid[i][j][k+1].getPerm()/6);
             }
             /* V(k-d) */
             if (k > 0) {
-              coeffMatrix.put(index, getIndex(i, j, k-1), solvedGrid[i][j][k-1].getPerm()/6);
+              coeffMatrix.set(index, getIndex(i, j, k-1), solvedGrid[i][j][k-1].getPerm()/6);
             }
           }
           else { 
             /* V */
-            coeffMatrix.put(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
+            coeffMatrix.set(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
             /* V(i+d) */
             if (i < iRes+1) {
-              coeffMatrix.put(index, getIndex(i+1, j, k), -solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i+1][j][k].getSize(), 2));
+              coeffMatrix.set(index, getIndex(i+1, j, k), -solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i+1][j][k].getSize(), 2));
             }
             /* V(i-d) */
             if (i > 0) {
-              coeffMatrix.put(index, getIndex(i-1, j, k), -solvedGrid[i-1][j][k].getPerm()/pow(solvedGrid[i-1][j][k].getSize(), 2));
+              coeffMatrix.set(index, getIndex(i-1, j, k), -solvedGrid[i-1][j][k].getPerm()/pow(solvedGrid[i-1][j][k].getSize(), 2));
             }
             /* V(j+d) */
             if (j < jRes+1) {
-              coeffMatrix.put(index, getIndex(i, j+1, k), -solvedGrid[i][j+1][k].getPerm()/pow(solvedGrid[i][j+1][k].getSize(), 2));
+              coeffMatrix.set(index, getIndex(i, j+1, k), -solvedGrid[i][j+1][k].getPerm()/pow(solvedGrid[i][j+1][k].getSize(), 2));
             }
             /* V(j-d) */
             if (j > 0) {
-              coeffMatrix.put(index, getIndex(i, j-1, k), -solvedGrid[i][j-1][k].getPerm()/pow(solvedGrid[i][j-1][k].getSize(), 2));
+              coeffMatrix.set(index, getIndex(i, j-1, k), -solvedGrid[i][j-1][k].getPerm()/pow(solvedGrid[i][j-1][k].getSize(), 2));
             }
             /* V(k+d) */
             if (k < kRes+1) {
-              coeffMatrix.put(index, getIndex(i, j, k+1), -solvedGrid[i][j][k+1].getPerm()/pow(solvedGrid[i][j][k+1].getSize(), 2));
+              coeffMatrix.set(index, getIndex(i, j, k+1), -solvedGrid[i][j][k+1].getPerm()/pow(solvedGrid[i][j][k+1].getSize(), 2));
             }
             /* V(k-d) */
             if (k > 0) {
-              coeffMatrix.put(index, getIndex(i, j, k-1), -solvedGrid[i][j][k-1].getPerm()/pow(solvedGrid[i][j][k-1].getSize(), 2));
+              coeffMatrix.set(index, getIndex(i, j, k-1), -solvedGrid[i][j][k-1].getPerm()/pow(solvedGrid[i][j][k-1].getSize(), 2));
             }
           }
         }
@@ -163,7 +163,7 @@ public class Grid3D {
     
    /* solve! */
 
-   solnVector = Solve.solve(coeffMatrix, yVector);
+   solnVector = coeffMatrix.ldltSolve(yVector);
    
    long end4 = System.nanoTime();
    
@@ -175,10 +175,10 @@ public class Grid3D {
           if (!((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1))) {
             int index = getIndex(i, j, k);
             if (swapTracker[index] == true) {
-              solvedGrid[i][j][k].setCharge(Double.valueOf(solnVector.get(index)));
+              solvedGrid[i][j][k].setCharge(Double.valueOf(solnVector.get(index, 0)));
             }
             else {
-              solvedGrid[i][j][k].setPotential(Double.valueOf(solnVector.get(index)));
+              solvedGrid[i][j][k].setPotential(Double.valueOf(solnVector.get(index, 0)));
             }
           }
         }
