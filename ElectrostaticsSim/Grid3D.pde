@@ -226,13 +226,7 @@ public class Grid3D {
   public void changeSize() {
   }
   
-  /*
-  public void setCell(int i, int j, int k, Cell newCell) {
-    grid[i][j][k] = newCell;
-  }
-  */
-  
-  public Cell getCell(int i, int j, int k) { 
+  public Cell getSolvedCell(int i, int j, int k) { 
     return solvedGrid[i][j][k];
   }
   
@@ -240,8 +234,16 @@ public class Grid3D {
     return initGrid[i][j][k];
   }
   
-  public int getRes() {
-    return 0;
+  public int getIRes() {
+    return iRes;
+  }
+  
+   public int getjRes() {
+    return jRes;
+  }
+  
+   public int getkRes() {
+    return kRes;
   }
   
 }

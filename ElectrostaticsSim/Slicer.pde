@@ -12,42 +12,44 @@ public class Slicer {
    'j' render ik, select by column
    'k' render ij, select by layer
    */
-  public Cell[][] getSlice(char mode, int index) {
-    int res = grid.getRes();
-    Cell[][] out = new Cell[res][res];
-    switch (mode) {
+  public Cell[][] getSlice(char sliceMode, boolean isSolved, int index) {
+    int iRes = grid.getIRes();
+    int jRes = grid.getjRes();
+    int kRes = grid.getkRes();
+    Cell[][] out;
+    switch (sliceMode) {
       /* jk */
       case 'i':
-        for (int k=0; k<res; k++) {
-          for (int j=0; j<res; j++) {
-            out[k][j] = grid.getCell(index, j, k);
+        out = new Cell[kRes][jRes];
+        for (int k=0; k<kRes; k++) {
+          for (int j=0; j<jRes; j++) {
+            out[k][j] = (isSolved) ? grid.getSolvedCell(index, j, k) : grid.getInitCell(index, j, k);
           }
         }
         break;
       /* ik */
       case 'j':
-        for (int i=0; i<res; i++) {
-          for (int k=0; k<res; k++) {
-            out[i][k] = grid.getCell(i, index, k);
+        out = new Cell[iRes][kRes];
+        for (int i=0; i<iRes; i++) {
+          for (int k=0; k<kRes; k++) {
+            out[i][k] = (isSolved) ? grid.getSolvedCell(i, index, k) : grid.getInitCell(i, index, k);
           }
         }
         break;
       /* ij */
       case 'k':
-        for (int i=0; i<res; i++) {
-          for (int j=0; j<res; j++) {
-            out[i][j] = grid.getCell(i, j, index);
+        out = new Cell[iRes][jRes];
+        for (int i=0; i<iRes; i++) {
+          for (int j=0; j<jRes; j++) {
+            out[i][j] = (isSolved) ? grid.getSolvedCell(i, j, index) : grid.getInitCell(i, j, index);
           }
         }
         break;
       default:
+        out = new Cell[iRes][jRes];
         break;
     }
     return out;
-  }
-  
-  public int getRes() {
-    return grid.getRes();
   }
   
 }
