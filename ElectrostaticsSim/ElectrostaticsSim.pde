@@ -36,12 +36,14 @@ public void setup() {
   //mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
   //mainObjectUi = new ObjectUi(this);
   
-  int res = 20;
-  mainGrid = new Grid3D(res, 0.25);
+  int iRes = 20;
+  int jRes = 20;
+  int kRes = 1;
+  mainGrid = new Grid3D(iRes, jRes, kRes, 0.25);
   
-  for (int i=1; i<res+1; i++) {
-    for (int j=1; j<res+1; j++) {
-      for (int k=1; k<res+1; k++) {
+  for (int i=1; i<iRes+1; i++) {
+    for (int j=1; j<jRes+1; j++) {
+      for (int k=1; k<kRes+1; k++) {
         mainGrid.getInitCell(i, j, k).setCharge(Double.valueOf(0));
         mainGrid.getInitCell(i, j, k).setPotential(null);
       }
@@ -49,8 +51,8 @@ public void setup() {
   }
   
   
-  mainGrid.getInitCell((res+2)/2, (res+2)/2, (res+2)/2).setPotential(Double.valueOf(5));
-  mainGrid.getInitCell((res+2)/2, (res+2)/2, (res+2)/2).setCharge(null);
+  mainGrid.getInitCell((iRes+2)/2, (jRes+2)/2, (kRes+2)/2).setPotential(Double.valueOf(5));
+  mainGrid.getInitCell((iRes+2)/2, (jRes+2)/2, (kRes+2)/2).setCharge(null);
   
   mainGrid.solveSystem();
   

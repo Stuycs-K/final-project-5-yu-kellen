@@ -14,13 +14,15 @@ public class Grid3D {
   private ArrayList<CellObj> objList;
   
   /* initRes > initSize, initSize must be divisible by initRes */
-  public Grid3D(int initRes, float initSize) {
-    res = initRes;
+  public Grid3D(int initIRes, int initJRes, int initKRes, float initSize) {
+    iRes = initIRes;
+    jRes = initJRes;
+    kRes = initKRes;
     size = initSize;
     
     /* initialize grid */
     /* edges not included */
-    initGrid = new Cell[res+2][res+2][res+2];
+    initGrid = new Cell[iRes+2][jRes+2][kRes+2];
     
     /* initialize grid cells */
     for (int i=0; i<iRes+2; i++) {
@@ -54,9 +56,8 @@ public class Grid3D {
   /* solve Poisson's equations using FDM for p, V, and E */
   public void solveSystem() {
     long start1 = System.nanoTime();
-    int realRes = (res+2);
-    int cubeRes = (int)pow((res+2), 3);
-    solvedGrid = new Cell[realRes][realRes][realRes];
+    int cubeRes = (iRes+2)*(jRes+2)*(kRes+2);
+    solvedGrid = new Cell[iRes+2][jRes+2][kRes+2];
     
     /* potential is the main unknown quantity */
     DoubleMatrix coeffMatrix = DoubleMatrix.zeros(cubeRes, cubeRes);
@@ -64,13 +65,13 @@ public class Grid3D {
     DoubleMatrix solnVector;
    
    /* tracks if charge and potential are swapped */
-    boolean[] swapTracker = new boolean[(int)pow((res+2), 3)];
+    boolean[] swapTracker = new boolean[cubeRes];
     
     long start2 = System.nanoTime();
 
-    for (int i=0; i<realRes; i++) {
-      for (int j=0; j<realRes; j++) {
-        for (int k=0; k<realRes; k++) {
+    for (int i=0; i<iRes+2; i++) {
+      for (int j=0; j<jRes+2; j++) {
+        for (int k=0; k<kRes+2; k++) {
           int index = getIndex(i, j, k);
           solvedGrid[i][j][k] = initGrid[i][j][k];
           
@@ -92,15 +93,15 @@ public class Grid3D {
     long start3 = System.nanoTime();
     
     /* init CoeffMatrix */
-    for (int i=0; i<realRes; i++) {
-      for (int j=0; j<realRes; j++) {
-        for (int k=0; k<realRes; k++) {
+    for (int i=0; i<iRes+2; i++) {
+      for (int j=0; j<jRes+2; j++) {
+        for (int k=0; k<kRes+2; k++) {
           int index = getIndex(i, j, k);
           if (swapTracker[index] == true) {
             /* V */
             coeffMatrix.put(index, getIndex(i, j, k), 1/(6.0));
             /* V(i+d) */
-            if (i < res+1) {
+            if (i < iRes+1) {
               coeffMatrix.put(index, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
             }
             /* V(i-d) */
@@ -108,7 +109,7 @@ public class Grid3D {
               coeffMatrix.put(index, getIndex(i-1, j, k), solvedGrid[i-1][j][k].getPerm()/6);
             }
             /* V(j+d) */
-            if (j < res+1) {
+            if (j < jRes+1) {
               coeffMatrix.put(index, getIndex(i, j+1, k), solvedGrid[i][j+1][k].getPerm()/6);
             }
             /* V(j-d) */
@@ -116,7 +117,7 @@ public class Grid3D {
               coeffMatrix.put(index, getIndex(i, j-1, k), solvedGrid[i][j-1][k].getPerm()/6);
             }
             /* V(k+d) */
-            if (k < res+1) {
+            if (k < kRes+1) {
               coeffMatrix.put(index, getIndex(i, j, k+1), solvedGrid[i][j][k+1].getPerm()/6);
             }
             /* V(k-d) */
@@ -128,7 +129,7 @@ public class Grid3D {
             /* V */
             coeffMatrix.put(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
             /* V(i+d) */
-            if (i < res+1) {
+            if (i < iRes+1) {
               coeffMatrix.put(index, getIndex(i+1, j, k), -solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i+1][j][k].getSize(), 2));
             }
             /* V(i-d) */
@@ -136,7 +137,7 @@ public class Grid3D {
               coeffMatrix.put(index, getIndex(i-1, j, k), -solvedGrid[i-1][j][k].getPerm()/pow(solvedGrid[i-1][j][k].getSize(), 2));
             }
             /* V(j+d) */
-            if (j < res+1) {
+            if (j < jRes+1) {
               coeffMatrix.put(index, getIndex(i, j+1, k), -solvedGrid[i][j+1][k].getPerm()/pow(solvedGrid[i][j+1][k].getSize(), 2));
             }
             /* V(j-d) */
@@ -144,7 +145,7 @@ public class Grid3D {
               coeffMatrix.put(index, getIndex(i, j-1, k), -solvedGrid[i][j-1][k].getPerm()/pow(solvedGrid[i][j-1][k].getSize(), 2));
             }
             /* V(k+d) */
-            if (k < res+1) {
+            if (k < kRes+1) {
               coeffMatrix.put(index, getIndex(i, j, k+1), -solvedGrid[i][j][k+1].getPerm()/pow(solvedGrid[i][j][k+1].getSize(), 2));
             }
             /* V(k-d) */
@@ -168,10 +169,10 @@ public class Grid3D {
    
    
    /* update solved grid */
-   for (int i=0; i<realRes; i++) {
-      for (int j=0; j<realRes; j++) {
-        for (int k=0; k<realRes; k++) {
-          if (!((i==0)||(j==0)||(k==0)||(i==res+1)||(j==res+1)||(k==res+1))) {
+   for (int i=0; i<iRes+2; i++) {
+      for (int j=0; j<jRes+2; j++) {
+        for (int k=0; k<kRes+2; k++) {
+          if (!((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1))) {
             int index = getIndex(i, j, k);
             if (swapTracker[index] == true) {
               solvedGrid[i][j][k].setCharge(Double.valueOf(solnVector.get(index)));
@@ -218,7 +219,7 @@ public class Grid3D {
 
   
   public int getIndex(int i, int j, int k) {
-    return i + (res+2)*j + (res+2)*(res+2)*k;
+    return i + (iRes+2)*j + (iRes+2)*(jRes+2)*k;
   }
   
   /* changes size of grid */ 
@@ -240,8 +241,7 @@ public class Grid3D {
   }
   
   public int getRes() {
-    return res;
+    return 0;
   }
-  
   
 }
