@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Grid3D {
   /* res x res x res grid */
-  private int res;
+  private int iRes, jRes, kRes;
   /* actual size length of the grid in units */
   private float size;
   /* z, y, x */
@@ -23,11 +23,11 @@ public class Grid3D {
     initGrid = new Cell[res+2][res+2][res+2];
     
     /* initialize grid cells */
-    for (int i=0; i<res+2; i++) {
-      for (int j=0; j<res+2; j++) {
-        for (int k=0; k<res+2; k++) {
+    for (int i=0; i<iRes+2; i++) {
+      for (int j=0; j<jRes+2; j++) {
+        for (int k=0; k<kRes+2; k++) {
           /* Boundary conditions */
-          if ((i==0)||(j==0)||(k==0)||(i==res+1)||(j==res+1)||(k==res+1)) {
+          if ((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1)) {
             initGrid[i][j][k] = new Cell(
                                     new PVector(i*size, j*size, k*size), 
                                     size,
