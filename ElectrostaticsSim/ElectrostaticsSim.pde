@@ -36,7 +36,7 @@ public void setup() {
   //mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
   //mainObjectUi = new ObjectUi(this);
   
-  int res = 500;
+  int res = 30;
   mainGrid = new Grid3D(res, 0.25);
   
   for (int i=1; i<res+1; i++) {
