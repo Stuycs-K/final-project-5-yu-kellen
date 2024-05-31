@@ -1,5 +1,4 @@
 import controlP5.*;
-import org.hipparchus.linear.*;
 
 int simulationRes;
 
@@ -37,7 +36,7 @@ public void setup() {
   //mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
   //mainObjectUi = new ObjectUi(this);
   
-  int res = 10;
+  int res = 500;
   mainGrid = new Grid3D(res, 0.25);
   
   for (int i=1; i<res+1; i++) {
