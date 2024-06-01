@@ -23,7 +23,7 @@ public class Slicer {
         out = new Cell[kRes][jRes];
         for (int k=0; k<kRes; k++) {
           for (int j=0; j<jRes; j++) {
-            out[k][j] = (isSolved) ? grid.getSolvedCell(index, j, k) : grid.getInitCell(index, j, k);
+            out[k][j] = (isSolved == true) ? grid.getSolvedCell(index, j, k) : grid.getInitCell(index, j, k);
           }
         }
         break;
@@ -32,7 +32,7 @@ public class Slicer {
         out = new Cell[iRes][kRes];
         for (int i=0; i<iRes; i++) {
           for (int k=0; k<kRes; k++) {
-            out[i][k] = (isSolved) ? grid.getSolvedCell(i, index, k) : grid.getInitCell(i, index, k);
+            out[i][k] = (isSolved == true) ? grid.getSolvedCell(i, index, k) : grid.getInitCell(i, index, k);
           }
         }
         break;
@@ -41,7 +41,7 @@ public class Slicer {
         out = new Cell[iRes][jRes];
         for (int i=0; i<iRes; i++) {
           for (int j=0; j<jRes; j++) {
-            out[i][j] = (isSolved) ? grid.getSolvedCell(i, j, index) : grid.getInitCell(i, j, index);
+            out[i][j] = (isSolved == true) ? grid.getSolvedCell(i, j, index) : grid.getInitCell(i, j, index);
           }
         }
         break;

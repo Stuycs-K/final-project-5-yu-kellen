@@ -73,7 +73,7 @@ public class Grid3D {
       for (int j=0; j<jRes+2; j++) {
         for (int k=0; k<kRes+2; k++) {
           int index = getIndex(i, j, k);
-          solvedGrid[i][j][k] = initGrid[i][j][k];
+          solvedGrid[i][j][k] = new Cell(initGrid[i][j][k]);
           
           /* potential != null */
           //System.out.println(initGrid[i][j][k].getCharge());
@@ -185,29 +185,6 @@ public class Grid3D {
       }
     }
     
-    /*
-    
-    //System.out.println(realRes);
-    float[][] charges = new float[realRes][realRes];
-    
-    for (int k=0; k<realRes; k++) {
-      
-    for (int i=0; i<realRes; i++) {
-      for (int y=0; y<realRes; y++) {
-        charges[i][y] = (float)solvedGrid[i][k][y].getPotential().doubleValue();
-      }
-    }
-    
-    for (int i=0; i<realRes; i++) {
-      for (int y=0; y<realRes; y++) {
-        System.out.print(String.format("%03.3f ", charges[i][y]));
-      }
-      System.out.println();
-    }
-    System.out.println("\n" + k);
-    }
-  }
-  */
   long end1 = System.nanoTime();
   System.out.println("T1: " + ((float)(end1 - start1))/pow(10, 9));
   System.out.println("T2: " + ((float)(end2 - start2))/pow(10, 9));
@@ -227,11 +204,72 @@ public class Grid3D {
   }
   
   public Cell getSolvedCell(int i, int j, int k) { 
-    return solvedGrid[i][j][k];
+    return solvedGrid[i+1][j+1][k+1];
+  }
+  
+  public float getMaxSolvedPotential() {
+    float max = (float)getSolvedCell(0, 0, 0).getPotential().doubleValue();
+    for (int i=0; i<iRes; i++) {
+      for (int j=0; j<jRes; j++) {
+        for (int k=0; k<kRes; k++) {
+          float p = (float)getSolvedCell(i, j, k).getPotential().doubleValue();
+          if (p > max) {
+            max = p;
+          }
+        }
+      }
+    }
+    return max;
+  }
+  
+  
+  public float getMinSolvedPotential() {
+    float min = (float)getSolvedCell(0, 0, 0).getPotential().doubleValue();
+    for (int i=0; i<iRes; i++) {
+      for (int j=0; j<jRes; j++) {
+        for (int k=0; k<kRes; k++) {
+          float p = (float)getSolvedCell(i, j, k).getPotential().doubleValue();
+          if (p < min) {
+            min = p;
+          }
+        }
+      }
+    }
+    return min;
+  }
+  
+  public float getMaxSolvedCharge() {
+    float max = (float)getSolvedCell(0, 0, 0).getCharge().doubleValue();
+    for (int i=0; i<iRes; i++) {
+      for (int j=0; j<jRes; j++) {
+        for (int k=0; k<kRes; k++) {
+          float p = (float)getSolvedCell(i, j, k).getCharge().doubleValue();
+          if (p > max) {
+            max = p;
+          }
+        }
+      }
+    }
+    return max;
+  }
+  
+  public float getMinSolvedCharge() {
+    float min = (float)getSolvedCell(0, 0, 0).getCharge().doubleValue();
+    for (int i=0; i<iRes; i++) {
+      for (int j=0; j<jRes; j++) {
+        for (int k=0; k<kRes; k++) {
+          float p = (float)getSolvedCell(i, j, k).getCharge().doubleValue();
+          if (p < min) {
+            min = p;
+          }
+        }
+      }
+    }
+    return min;
   }
   
   public Cell getInitCell(int i, int j, int k) { 
-    return initGrid[i][j][k];
+    return initGrid[i+1][j+1][k+1];
   }
   
   public int getIRes() {

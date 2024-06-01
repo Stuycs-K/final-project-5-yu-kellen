@@ -5,12 +5,15 @@ int simulationRes;
 Grid3D mainGrid;
 Slicer mainSlicer;
 
+int iRes = 21;
+int jRes = 21;
+int kRes = 21;
+
+int currSlice = 21/2;
 
 /* UI */
 ControlP5 mainUi;
 Screen2D mainScreen2D;
-SlicerUi mainSlicerUi;
-ObjectUi mainObjectUi;
 
 /* Default Fonts */
 HashMap<String, PFont> fontMap;
@@ -32,29 +35,32 @@ public void setup() {
 
   /* init ui */
   mainUi = new ControlP5(this);
-  //mainScreen2D = new Screen2D(this, 5);
-  //mainSlicerUi = new SlicerUi(this, fontMap, mainSlicer, mainScreen2D);
-  //mainObjectUi = new ObjectUi(this);
+  mainGrid = new Grid3D(iRes, jRes, kRes, 0.002);
+  mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 20);
+  mainSlicer = new Slicer(mainGrid);
   
-  int iRes = 20;
-  int jRes = 20;
-  int kRes = 5;
-  mainGrid = new Grid3D(iRes, jRes, kRes, 0.25);
-  
-  for (int i=1; i<iRes+1; i++) {
-    for (int j=1; j<jRes+1; j++) {
-      for (int k=1; k<kRes+1; k++) {
+  for (int i=0; i<iRes; i++) {
+    for (int j=0; j<jRes; j++) {
+      for (int k=0; k<kRes; k++) {
         mainGrid.getInitCell(i, j, k).setCharge(Double.valueOf(0));
         mainGrid.getInitCell(i, j, k).setPotential(null);
       }
     }
   }
   
+  mainGrid.getInitCell(7, jRes/2, 7).setPotential(null);
+  mainGrid.getInitCell(7, jRes/2, 7).setCharge(Double.valueOf(10E-9));
   
-  mainGrid.getInitCell((iRes+2)/2, (jRes+2)/2, (kRes+2)/2).setPotential(Double.valueOf(5));
-  mainGrid.getInitCell((iRes+2)/2, (jRes+2)/2, (kRes+2)/2).setCharge(null);
+  mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setPotential(null);
+  mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setCharge(Double.valueOf(-10E-9));
   
   mainGrid.solveSystem();
+  
+  mainScreen2D.setMode('p');
+  mainScreen2D.updateMinMaxes();
+  mainScreen2D.updateBuffer(mainSlicer.getSlice('j', true, jRes/2));
+  
+ 
   
   /* fun */
   /*
@@ -71,6 +77,27 @@ public void setup() {
                           .setPosition(width/2 - 300, 25);
                           
   */
+}
+
+void keyPressed() {
+  switch (key) {
+    case 'w':
+      currSlice++;
+      currSlice %= jRes;
+      mainScreen2D.updateBuffer(mainSlicer.getSlice('j', true, currSlice));
+      System.out.println(currSlice);
+      break;
+    case 's':
+      currSlice--;
+      if (currSlice < 0) {
+        currSlice = jRes-1;
+      }
+      mainScreen2D.updateBuffer(mainSlicer.getSlice('j', true, currSlice));
+      System.out.println(currSlice);
+      break;
+    default:
+      break;
+  }
 }
 
 

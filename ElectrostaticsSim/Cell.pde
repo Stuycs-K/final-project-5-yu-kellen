@@ -13,6 +13,23 @@ public class Cell {
   private PVector centerPos;
   
   /* constructors */
+  public Cell(Cell other) {
+    if (other.getCharge() != null) {
+      charge = Double.valueOf(other.getCharge().doubleValue());
+    }
+    if (other.getPotential() != null) {
+      potential = Double.valueOf(other.getPotential().doubleValue());
+    }
+    if (other.getEField() != null) {
+      eField = eField = other.getEField().copy();
+    }
+    centerPos = other.getCenterPos().copy();
+    size = other.getSize();
+    colr = other.getColor();
+    perm = other.getPerm();
+    
+  }
+  
   public Cell(PVector initCenterPos, float initSize) {
     this(initCenterPos, initSize, color(255));
   }
