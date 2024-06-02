@@ -1,60 +1,59 @@
  
 public class CellObj {
+  private PVector pos;
+  
+  private float xCoeff;
+  private float yCoeff;
+  private float zCoeff;
+  
+  private float xPow;
+  private float yPow;
+  private float zPow;
 
-  private double xCoeff;
-  private double yCoeff;
-  private double zCoeff;
+  private float xMin;
+  private float xMax;
+  private float yMin;
+  private float yMax;
+  private float zMin;
+  private float zMax;
   
-  private double xOff;
-  private double yOff;
-  private double zOff;
-  
-  private double xPow;
-  private double yPow;
-  private double zPow;
-
-  private double xMin;
-  private double xMax;
-  private double yMin;
-  private double yMax;
-  private double zMin;
-  private double zMax;
-  
-  private double radiusPow;
-  private double radiusMin;
-  private double radiusMax;
+  private float radiusPow;
+  private float radiusMin;
+  private float radiusMax;
   
   private float perm;
-  private double charge;
-  private double potential;
+  private Double charge;
+  private Double potential;
+  
+  private color colr;
   
   private char type;
   /*
     c - conductor
-    d - dialectric/medium
-    p - point charge
+    d - whatever other things exist
   */
   
 
   public CellObj(
-    double initXCoeff, double initYCoeff, double initZCoeff,
-    double initXOff, double initYOff, double initZOff,
-    double initXPow, double initYPow, double initZPow,
-    double initXMin, double initXMax,
-    double initYMin, double initYMax,
-    double initZMin, double initZMax,
-    double initRadiusMin, double initRadiusMax,
-    double initRadiusPow
+    PVector initPos,
+    float initXCoeff, float initYCoeff, float initZCoeff,
+    float initXPow, float initYPow, float initZPow,
+    float initXMin, float initXMax,
+    float initYMin, float initYMax,
+    float initZMin, float initZMax,
+    float initRadiusMin, float initRadiusMax,
+    float initRadiusPow,
+    color initColr,
+    char initType,
+    float initPerm, Double initCharge, Double initPotential
   ) 
   {
+    pos = initPos;
+    
     xCoeff = initXCoeff;
     yCoeff = initYCoeff;
     zCoeff = initZCoeff;
 
-    xOff = initXOff;
-    yOff = initYOff;
-    zOff = initZOff;
-    
     xPow = initXPow;
     yPow = initYPow;
     zPow = initZPow;
@@ -70,46 +69,91 @@ public class CellObj {
     radiusMax = initRadiusMax;
     
     radiusPow = initRadiusPow;
+    
+    colr = initColr;
+    
+    type = initType;
+    
+    perm = initPerm;
+    charge = initCharge;
+    potential = initPotential;
   }
   
-  public boolean inRange(double x, double y, double z) {
+  public boolean inRange(float x, float y, float z) {
     boolean xin = (x >= xMin) && (x <= xMax);
     boolean yin = (y >= yMin) && (y <= yMax);
     boolean zin = (z >= zMin) && (z <= zMax);
     return (xin & yin & zin);
   }
   
-  public boolean satisfies(double x, double y, double z) {
-    double xVal = xCoeff*Math.pow((x - xOff), xPow);
-    double yVal = yCoeff*Math.pow((y - yOff), yPow);
-    double zVal = zCoeff*Math.pow((z - zOff), zPow);
-    double rValMin = Math.pow(radiusMin, radiusPow);
-    double rValMax = Math.pow(radiusMax, radiusPow);
-    return (((xVal + yVal + zVal) >= radiusMin) && ((xVal + yVal + zVal) <= radiusMax));
+  public boolean satisfies(float x, float y, float z) {
+    float xVal = xCoeff*pow((x - pos.x), xPow);
+    float yVal = yCoeff*pow((y - pos.y), yPow);
+    float zVal = zCoeff*pow((z - pos.z), zPow);
+    float rValMin = pow(radiusMin, radiusPow);
+    float rValMax = pow(radiusMax, radiusPow);
+    return (((xVal + yVal + zVal) >= rValMin) && ((xVal + yVal + zVal) <= rValMax));
   }
   
-  public double getXMin() {
+  public boolean onMinEdge(float x, float y, float z) {
+    float xVal = xCoeff*pow((x - pos.x), xPow);
+    float yVal = yCoeff*pow((y - pos.y), yPow);
+    float zVal = zCoeff*pow((z - pos.z), zPow);
+    float rValMin = pow(radiusMin, radiusPow);
+    return ((xVal + yVal + zVal) == rValMin);
+  }
+  
+  public boolean onMaxEdge(float x, float y, float z) {
+    float xVal = xCoeff*pow((x - pos.x), xPow);
+    float yVal = yCoeff*pow((y - pos.y), yPow);
+    float zVal = zCoeff*pow((z - pos.z), zPow);
+    float rValMax = pow(radiusMax, radiusPow);
+    return ((xVal + yVal + zVal) == rValMax);
+  }
+  
+  public char getType() {
+    return type;
+  }
+ 
+  
+  public float getXMin() {
     return xMin;
   }
   
-  public double getXMax() {
+  public float getXMax() {
     return xMax;
   }
   
-  public double getYMin() {
+  public float getYMin() {
     return yMin;
   }
   
-  public double getYMax() {
+  public float getYMax() {
     return yMax;
   }
   
-  public double getZMin() {
+  public float getZMin() {
     return zMin;
   }
   
-  public double getZMax() {
+  public float getZMax() {
     return zMax;
+  }
+  
+  public float getPerm() {
+    return perm;
+  }
+  
+  public Double getCharge() {
+    return charge;
+  }
+  
+  public Double getPotential() {
+    return potential;
+  }
+  
+  public color getColor() {
+    return colr;
   }
   
 

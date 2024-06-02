@@ -6,8 +6,10 @@ Grid3D mainGrid;
 Slicer mainSlicer;
 
 int iRes = 100;
-int jRes = 0;
+int jRes = 1;
 int kRes = 100;
+
+float unit = 0.001;
 
 int currSlice = 0;
 
@@ -20,7 +22,22 @@ HashMap<String, PFont> fontMap;
 
 /* Fun */
 PImage backGroundImg;
-
+/*
+public CellObj(
+    PVector initPos,
+    float initXCoeff, float initYCoeff, float initZCoeff,
+    float initXPow, float initYPow, float initZPow,
+    float initXMin, float initXMax,
+    float initYMin, float initYMax,
+    float initZMin, float initZMax,
+    float initRadiusMin, float initRadiusMax,
+    float initRadiusPow,
+    color initColr,
+    char initType,
+    float initPerm, Double initCharge, Double initPotential
+  ) 
+  
+*/
 
 public void setup() {
   size(10, 10);
@@ -35,24 +52,26 @@ public void setup() {
 
   /* init ui */
   mainUi = new ControlP5(this);
-  mainGrid = new Grid3D(iRes, jRes, kRes, 0.002);
+  mainGrid = new Grid3D(iRes, jRes, kRes, unit);
   mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 10);
   mainSlicer = new Slicer(mainGrid);
   
-  for (int i=0; i<iRes; i++) {
-    for (int j=0; j<jRes; j++) {
-      for (int k=0; k<kRes; k++) {
-        mainGrid.getInitCell(i, j, k).setCharge(Double.valueOf(0));
-        mainGrid.getInitCell(i, j, k).setPotential(null);
-      }
-    }
-  }
+  CellObj sphere = new CellObj(
+                         new PVector(0, 0, 0),
+                         1.0, 1.0, 1.0,
+                         2.0, 2.0, 2.0,
+                         -10.0, 10.0,
+                         -10.0, 10.0,
+                         -10.0, 10.0,
+                         10.0*unit, 6.0*unit,
+                         2.0,
+                         color(255),
+                         'd',
+                         1.0, Double.valueOf(10E-9), null
+                         );
   
-  mainGrid.getInitCell(7, jRes/2, 7).setPotential(null);
-  mainGrid.getInitCell(7, jRes/2, 7).setCharge(Double.valueOf(10E-8));
-  
-  mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setPotential(null);
-  mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setCharge(Double.valueOf(-10E-8));
+  mainGrid.addObject(sphere);
+  mainGrid.drawObjects();
   
   mainGrid.solveSystem();
   

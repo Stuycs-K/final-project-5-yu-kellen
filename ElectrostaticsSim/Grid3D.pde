@@ -8,7 +8,7 @@ import java.util.*;
 public class Grid3D {
   /* res x res x res grid */
   private int iRes, jRes, kRes;
-  /* actual size length of the grid in units */
+  /* size of each cell */
   private float size;
   /* z, y, x */
   private Cell initGrid[][][];
@@ -27,6 +27,8 @@ public class Grid3D {
     /* initialize grid */
     /* edges not included */
     initGrid = new Cell[iRes+2][jRes+2][kRes+2];
+    /* initialize objectList */
+    objList = new ArrayList<CellObj>();
 
     /* initialize grid cells */
     for (int i=0; i<iRes+2; i++) {
@@ -81,12 +83,47 @@ public class Grid3D {
     }
   }
   
-  /
+  public void addObject(CellObj obj) {
+    objList.add(obj);
+  }
+  
+
   public void drawObjects() {
     clearGrid();
-    for (CellOb
-    
-    
+    for (CellObj obj : objList) {
+      System.out.println(obj);
+      for (int i=0; i<iRes; i++) {
+        for (int j=0; j<jRes; j++) {
+          for (int k=0; k<kRes; k++) {
+            float x = size*i;
+            float y = size*j;
+            float z = size*k;
+            if (obj.inRange(x, y, z) && obj.satisfies(x, y, z)) {
+              System.out.println("E");
+              Cell cell = getInitCell(i, j, k);
+              cell.setColor(obj.getColor());
+              cell.setPerm(obj.getPerm());
+              switch (obj.getType()) {
+                /* conductor, set charges of the edges unknown, make voltage uniform */
+                case 'c':
+                  cell.setPotential(obj.getPotential());
+                  cell.setCharge(null);
+                  if (!obj.onMinEdge(x, y, z) || !obj.onMaxEdge(x, y, z)) {
+                    cell.setCharge(Double.valueOf(0));
+                  }
+                  break;
+                case 'd':
+                  cell.setPotential(obj.getPotential());
+                  cell.setCharge(obj.getCharge());
+                  break;
+                default:
+                  break;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
 

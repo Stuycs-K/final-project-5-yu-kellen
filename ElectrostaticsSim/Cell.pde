@@ -82,7 +82,7 @@ public class Cell {
     centerPos.mult(scale);
   }
   
-  public void changeColor(color newColor) {
+  public void setColor(color newColor) {
     colr = newColor;
   }
   
