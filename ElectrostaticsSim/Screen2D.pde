@@ -61,6 +61,9 @@ public class Screen2D extends PApplet {
   
   public void draw() {
     colorMode(HSB,360,100,100,100);
+    float val;
+    float ratio;
+    float hueVal;
     if (buffer[0][0] != null) {
       for (int i=0; i<buffer.length; i++) {
         for (int j=0; j<buffer[i].length; j++) {  
@@ -70,14 +73,20 @@ public class Screen2D extends PApplet {
             case 'l':
               break;
             case 'p':
-              float p = (float)buffer[i][j].getPotential().doubleValue();
-              float ratio = abs(p-minP)/abs(maxP - minP);
-              float hueVal = abs(ratio*360.0)*1.1;
+              val = (float)buffer[i][j].getPotential().doubleValue();
+              ratio = abs(val-minP)/abs(maxP - minP);
+              hueVal = abs(ratio*360.0);
               fill(hueVal);
               stroke(hueVal);
               rect(i*scale, j*scale, scale, scale);
               break;
             case 'c':
+              val = (float)buffer[i][j].getCharge().doubleValue();
+              ratio = abs(val-minC)/abs(maxC - minC);
+              hueVal = abs(ratio*360.0);
+              fill(hueVal);
+              stroke(hueVal);
+              rect(i*scale, j*scale, scale, scale);
               break;
             case 'e':
               break;
@@ -124,21 +133,24 @@ public class Screen2D extends PApplet {
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
     
-    /*
+    
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
-        System.out.print(String.format("%4.4f, ", buffer[i][j].getPotential().doubleValue()));
+        System.out.print(String.format("%3.2e, ", buffer[i][j].getPotential().doubleValue()));
       }
       System.out.println();
     }
-    */
+    
+    
+    
   }
   
   public void updateMinMaxes() {
     minP = grid.getMinSolvedPotential();
     maxP = grid.getMaxSolvedPotential();
     minC = grid.getMinSolvedCharge();
-    maxC = grid.getMaxSolvedPotential();
+    maxC = grid.getMaxSolvedCharge();
+    System.out.println(String.format("P: %e, %e V: %e, %e", minP, maxP, minC, maxC));
   }
   
 }

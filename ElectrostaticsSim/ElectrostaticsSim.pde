@@ -5,11 +5,11 @@ int simulationRes;
 Grid3D mainGrid;
 Slicer mainSlicer;
 
-int iRes = 100;
+int iRes = 30;
 int jRes = 1;
-int kRes = 100;
+int kRes = 30;
 
-float unit = 0.1;
+float unit = 1E-9;
 
 int currSlice = 0;
 
@@ -30,6 +30,10 @@ public CellObj(
     float initXMin, float initXMax,
     float initYMin, float initYMax,
     float initZMin, float initZMax,
+    boolean initUseExclusion,
+    float initXEMin, float initXEMax,
+    float initYEMin, float initYEMax,
+    float initZEMin, float initZEMax,
     float initRadiusMin, float initRadiusMax,
     float initRadiusPow,
     color initColr,
@@ -38,7 +42,6 @@ public CellObj(
   ) 
   
 */
-
 public void setup() {
   size(10, 10);
   surface.setAlwaysOnTop(true);
@@ -57,20 +60,47 @@ public void setup() {
   mainSlicer = new Slicer(mainGrid);
   
   CellObj sphere = new CellObj(
+                         unit,
+                         new PVector(0, 0, 0),
+                         1.0, 1.0, 1.0,
+                         2.0, 2.0, 2.0,
+                         -20*unit, 20*unit,
+                         -20*unit, 20*unit,
+                         -20*unit, 20*unit,
+                         true,
+                         -7*unit, 7*unit,
+                         -7*unit, 7*unit,
+                         -7*unit, 7*unit,
+                         false,
+                         5*unit, 12*unit,
+                         1.0,
+                         color(255),
+                         'c',
+                         8.8541878188E-12, null, Double.valueOf(0)
+                         );
+                         
+  CellObj ball = new CellObj(
+                         unit,
                          new PVector(0, 0, 0),
                          1.0, 1.0, 1.0,
                          2.0, 2.0, 2.0,
                          -10.0, 10.0,
                          -10.0, 10.0,
                          -10.0, 10.0,
-                         10*unit, 15*unit,
-                         2.0,
+                         false,
+                         -5*unit, 5*unit,
+                         -5*unit, 5*unit,
+                         -5*unit, 5*unit,
+                         true,
+                         0*unit, 0*unit,
+                         1.0,
                          color(255),
                          'd',
-                         1.0, Double.valueOf(255), null
+                         8.8541878188E-12, Double.valueOf(1E-9), null
                          );
   
-  mainGrid.addObject(sphere);
+  //mainGrid.addObject(sphere);
+  mainGrid.addObject(ball);
   mainGrid.drawObjects();
   
   mainGrid.solveSystem();

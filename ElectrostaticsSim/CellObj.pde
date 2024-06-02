@@ -1,5 +1,7 @@
  
 public class CellObj {
+  private float size;
+  
   private PVector pos;
   
   private float xCoeff;
@@ -16,6 +18,17 @@ public class CellObj {
   private float yMax;
   private float zMin;
   private float zMax;
+  
+  private boolean useExclusion;
+  
+  private float xEMin;
+  private float xEMax;
+  private float yEMin;
+  private float yEMax;
+  private float zEMin;
+  private float zEMax;
+  
+  private boolean isCircular;
   
   private float radiusPow;
   private float radiusMin;
@@ -35,12 +48,18 @@ public class CellObj {
   
 
   public CellObj(
+    float initSize,
     PVector initPos,
     float initXCoeff, float initYCoeff, float initZCoeff,
     float initXPow, float initYPow, float initZPow,
     float initXMin, float initXMax,
     float initYMin, float initYMax,
     float initZMin, float initZMax,
+    boolean initUseExclusion,
+    float initXEMin, float initXEMax,
+    float initYEMin, float initYEMax,
+    float initZEMin, float initZEMax,
+    boolean initIsCircular,
     float initRadiusMin, float initRadiusMax,
     float initRadiusPow,
     color initColr,
@@ -48,6 +67,8 @@ public class CellObj {
     float initPerm, Double initCharge, Double initPotential
   ) 
   {
+    size = initSize;
+    
     pos = initPos;
     
     xCoeff = initXCoeff;
@@ -65,6 +86,17 @@ public class CellObj {
     zMin = initZMin;
     zMax = initZMax;
     
+    useExclusion = initUseExclusion;
+    
+    xEMin = initXEMin;
+    xEMax = initXEMax;
+    yEMin = initYEMin;
+    yEMax = initYEMax;
+    zEMin = initZEMin;
+    zEMax = initZEMax;
+    
+    isCircular = initIsCircular;
+    
     radiusMin = initRadiusMin;
     radiusMax = initRadiusMax;
     
@@ -80,32 +112,52 @@ public class CellObj {
   }
   
   public boolean inRange(float x, float y, float z) {
+    boolean inExclusive = false;
+    if (useExclusion) {
+      boolean xEin = (x >= xEMin) && (x <= xEMax);
+      boolean yEin = (y >= yEMin) && (y <= yEMax);
+      boolean zEin = (z >= zEMin) && (z <= zEMax);
+      inExclusive = (xEin && yEin && zEin);
+    }
     boolean xin = (x >= xMin) && (x <= xMax);
     boolean yin = (y >= yMin) && (y <= yMax);
     boolean zin = (z >= zMin) && (z <= zMax);
-    return (xin && yin && zin);
+    return (xin && yin && zin) && !inExclusive;
   }
   
   public boolean satisfies(float x, float y, float z) {
-    float xVal = xCoeff*pow((x - pos.x), xPow);
-    float yVal = yCoeff*pow((y - pos.y), yPow);
-    float zVal = zCoeff*pow((z - pos.z), zPow);
-    //System.out.println(sqrt(xVal + yVal + zVal) + ", " + radiusMin + ", " + radiusMax);
-    return ((sqrt(xVal + yVal + zVal) >= radiusMin) && (sqrt(xVal + yVal + zVal) <= radiusMax));
+    if (isCircular) {
+      float xVal = xCoeff*pow((x - pos.x), xPow);
+      float yVal = yCoeff*pow((y - pos.y), yPow);
+      float zVal = zCoeff*pow((z - pos.z), zPow);
+      //System.out.println(sqrt(xVal + yVal + zVal) + ", " + radiusMin + ", " + radiusMax);
+      return ((sqrt(xVal + yVal + zVal) >= radiusMin) && (sqrt(xVal + yVal + zVal) <= radiusMax));
+    }
+    return true;
   }
-  
-  public boolean onMinEdge(float x, float y, float z) {
-    float xVal = xCoeff*pow((x - pos.x), xPow);
-    float yVal = yCoeff*pow((y - pos.y), yPow);
-    float zVal = zCoeff*pow((z - pos.z), zPow);
-    return (sqrt(xVal + yVal + zVal) == radiusMin);
-  }
-  
-  public boolean onMaxEdge(float x, float y, float z) {
-    float xVal = xCoeff*pow((x - pos.x), xPow);
-    float yVal = yCoeff*pow((y - pos.y), yPow);
-    float zVal = zCoeff*pow((z - pos.z), zPow);
-    return (sqrt(xVal + yVal + zVal) == radiusMax);
+
+  public boolean onEdge(float x, float y, float z) {
+    float tol = size*1;
+    if (isCircular) {
+      float xVal = xCoeff*pow((x - pos.x), xPow);
+      float yVal = yCoeff*pow((y - pos.y), yPow);
+      float zVal = zCoeff*pow((z - pos.z), zPow);
+      boolean radMin = (abs(sqrt(xVal + yVal + zVal) - radiusMin) < tol);
+      boolean radMax = (abs(sqrt(xVal + yVal + zVal) - radiusMax) < tol);
+      return (radMin || radMax);
+    }
+    else {
+      boolean onInner = false;
+      if (useExclusion) {
+        onInner = ((abs(x - xEMin) < tol) || (abs(x - xEMax) < tol)) || 
+                  ((abs(y - yEMin) < tol) || (abs(y - yEMax) < tol)) || 
+                  ((abs(z - zEMin) < tol) || (abs(z - zEMax) < tol));
+      }
+      boolean onOuter = ((abs(x - xMin) < tol) || (abs(x - xMax) < tol)) ||
+                        ((abs(y - yMin) < tol) || (abs(y - yMax) < tol)) || 
+                        ((abs(z - zMin) < tol) || (abs(z - zMax) < tol));
+      return (onInner || onOuter);
+    }
   }
   
   public char getType() {
