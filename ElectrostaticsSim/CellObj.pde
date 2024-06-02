@@ -83,32 +83,29 @@ public class CellObj {
     boolean xin = (x >= xMin) && (x <= xMax);
     boolean yin = (y >= yMin) && (y <= yMax);
     boolean zin = (z >= zMin) && (z <= zMax);
-    return (xin & yin & zin);
+    return (xin && yin && zin);
   }
   
   public boolean satisfies(float x, float y, float z) {
     float xVal = xCoeff*pow((x - pos.x), xPow);
     float yVal = yCoeff*pow((y - pos.y), yPow);
     float zVal = zCoeff*pow((z - pos.z), zPow);
-    float rValMin = pow(radiusMin, radiusPow);
-    float rValMax = pow(radiusMax, radiusPow);
-    return (((xVal + yVal + zVal) >= rValMin) && ((xVal + yVal + zVal) <= rValMax));
+    //System.out.println(sqrt(xVal + yVal + zVal) + ", " + radiusMin + ", " + radiusMax);
+    return ((sqrt(xVal + yVal + zVal) >= radiusMin) && (sqrt(xVal + yVal + zVal) <= radiusMax));
   }
   
   public boolean onMinEdge(float x, float y, float z) {
     float xVal = xCoeff*pow((x - pos.x), xPow);
     float yVal = yCoeff*pow((y - pos.y), yPow);
     float zVal = zCoeff*pow((z - pos.z), zPow);
-    float rValMin = pow(radiusMin, radiusPow);
-    return ((xVal + yVal + zVal) == rValMin);
+    return (sqrt(xVal + yVal + zVal) == radiusMin);
   }
   
   public boolean onMaxEdge(float x, float y, float z) {
     float xVal = xCoeff*pow((x - pos.x), xPow);
     float yVal = yCoeff*pow((y - pos.y), yPow);
     float zVal = zCoeff*pow((z - pos.z), zPow);
-    float rValMax = pow(radiusMax, radiusPow);
-    return ((xVal + yVal + zVal) == rValMax);
+    return (sqrt(xVal + yVal + zVal) == radiusMax);
   }
   
   public char getType() {

@@ -9,7 +9,7 @@ int iRes = 100;
 int jRes = 1;
 int kRes = 100;
 
-float unit = 0.001;
+float unit = 0.1;
 
 int currSlice = 0;
 
@@ -63,11 +63,11 @@ public void setup() {
                          -10.0, 10.0,
                          -10.0, 10.0,
                          -10.0, 10.0,
-                         10.0*unit, 6.0*unit,
+                         10*unit, 15*unit,
                          2.0,
                          color(255),
                          'd',
-                         1.0, Double.valueOf(10E-9), null
+                         1.0, Double.valueOf(255), null
                          );
   
   mainGrid.addObject(sphere);

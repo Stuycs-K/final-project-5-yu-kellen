@@ -37,7 +37,7 @@ public class Grid3D {
           /* Boundary conditions */
           if ((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1)) {
             initGrid[i][j][k] = new Cell(
-              new PVector(i*size, j*size, k*size),
+              new PVector((i-(iRes+2)/2)*size, (j-(jRes+2)/2)*size, (k-(kRes+2)/2)*size),
               size,
               color(0),
               Double.valueOf(0),
@@ -47,7 +47,7 @@ public class Grid3D {
               );
           } else {
             initGrid[i][j][k] = new Cell(
-              new PVector(i*size, j*size, k*size),
+              new PVector((i-(iRes+2)/2)*size, (j-(jRes+2)/2)*size, (k-(kRes+2)/2)*size),
               size
               );
           }
@@ -64,7 +64,7 @@ public class Grid3D {
           /* Boundary conditions */
           if ((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1)) {
             initGrid[i][j][k] = new Cell(
-              new PVector(i*size, j*size, k*size),
+              new PVector((i-(iRes+2)/2)*size, (j-(jRes+2)/2)*size, (k-(kRes+2)/2)*size),
               size,
               color(0),
               Double.valueOf(0),
@@ -74,8 +74,13 @@ public class Grid3D {
               );
           } else {
             initGrid[i][j][k] = new Cell(
-              new PVector(i*size, j*size, k*size),
-              size
+              new PVector((i-(iRes+2)/2)*size, (j-(jRes+2)/2)*size, (k-(kRes+2)/2)*size),
+              size,
+              color(0),
+              Double.valueOf(0),
+              null,
+              Cell.pVacuum,
+              new PVector(0, 0, 0)
               );
           }
         }
@@ -95,12 +100,13 @@ public class Grid3D {
       for (int i=0; i<iRes; i++) {
         for (int j=0; j<jRes; j++) {
           for (int k=0; k<kRes; k++) {
-            float x = size*i;
-            float y = size*j;
-            float z = size*k;
+            Cell cell = getInitCell(i, j, k);
+            PVector pos = cell.getCenterPos();
+            //System.out.println(pos);
+            float x = pos.x;
+            float y = pos.y;
+            float z = pos.z;
             if (obj.inRange(x, y, z) && obj.satisfies(x, y, z)) {
-              System.out.println("E");
-              Cell cell = getInitCell(i, j, k);
               cell.setColor(obj.getColor());
               cell.setPerm(obj.getPerm());
               switch (obj.getType()) {
@@ -155,7 +161,8 @@ public class Grid3D {
           if (initGrid[i][j][k].getCharge() == null) {
             swapTracker[index] = true;
             yVector.set(index, 0, (-1)*initGrid[i][j][k].getPotential().doubleValue());
-          } else {
+          } 
+          else {
             swapTracker[index] = false;
             yVector.set(index, 0, initGrid[i][j][k].getCharge().doubleValue());
           }
