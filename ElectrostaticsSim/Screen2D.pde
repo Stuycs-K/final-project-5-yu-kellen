@@ -11,6 +11,9 @@ public class Screen2D extends PApplet {
   private int screenRes;
   private int scale;
   
+  public final color voltageCHigh = color(204, 102, 0);
+  public final color voltageCLow = color(0, 102, 153);
+  
   float minP; 
   float maxP;
   float minC;
@@ -60,10 +63,9 @@ public class Screen2D extends PApplet {
   }
   
   public void draw() {
-    colorMode(HSB,360,100,100,100);
     float val;
     float ratio;
-    float hueVal;
+    color colorVal;
     if (buffer[0][0] != null) {
       for (int i=0; i<buffer.length; i++) {
         for (int j=0; j<buffer[i].length; j++) {  
@@ -75,17 +77,17 @@ public class Screen2D extends PApplet {
             case 'p':
               val = (float)buffer[i][j].getPotential().doubleValue();
               ratio = abs(val-minP)/abs(maxP - minP);
-              hueVal = abs(ratio*360.0);
-              fill(hueVal);
-              stroke(hueVal);
+              colorVal = lerpColor(voltageCLow, voltageCHigh, ratio);
+              fill(colorVal);
+              stroke(colorVal);
               rect(i*scale, j*scale, scale, scale);
               break;
             case 'c':
               val = (float)buffer[i][j].getCharge().doubleValue();
-              ratio = abs(val-minC)/abs(maxC - minC);
-              hueVal = abs(ratio*360.0);
-              fill(hueVal);
-              stroke(hueVal);
+              ratio = abs(val)/abs(maxC);
+              colorVal = lerpColor(voltageCLow, voltageCHigh, ratio);
+              fill(colorVal);
+              stroke(colorVal);
               rect(i*scale, j*scale, scale, scale);
               break;
             case 'e':
@@ -132,7 +134,7 @@ public class Screen2D extends PApplet {
   
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
-    /*
+    
     
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
@@ -142,7 +144,7 @@ public class Screen2D extends PApplet {
     }
     
     
-    */
+    
   }
   
   public void updateMinMaxes() {

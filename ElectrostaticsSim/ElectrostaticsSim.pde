@@ -9,7 +9,7 @@ int iRes = 20;
 int jRes = 20;
 int kRes = 20;
 
-float unit = 0.0001;
+float unit = 1E-6;
 
 int currSlice = 5;
 
@@ -56,7 +56,7 @@ public void setup() {
   /* init ui */
   mainUi = new ControlP5(this);
   mainGrid = new Grid3D(iRes, jRes, kRes, unit);
-  mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 10);
+  mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 30);
   mainSlicer = new Slicer(mainGrid);
   
   CellObj sphere = new CellObj(

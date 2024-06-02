@@ -192,13 +192,13 @@ public class Grid3D {
           } 
           else {
             /* V */
-            coeffMatrix.set(index, getIndex(i, j, k), -6/pow(size, 2));
-            coeffMatrix.set(index, getIndex(i+1, j, k), 1/pow(size, 2));
-            coeffMatrix.set(index, getIndex(i-1, j, k), 1/pow(size, 2));
-            coeffMatrix.set(index, getIndex(i, j+1, k), 1/pow(size, 2));
-            coeffMatrix.set(index, getIndex(i, j-1, k), 1/pow(size, 2));
-            coeffMatrix.set(index, getIndex(i, j, k+1), 1/pow(size, 2));
-            coeffMatrix.set(index, getIndex(i, j, k-1), 1/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j, k), -6.0/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i+1, j, k), 1.0/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i-1, j, k), 1.0/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j+1, k), 1.0/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j-1, k), 1.0/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j, k+1), 1.0/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j, k-1), 1.0/pow(size, 2));
 
           }
         }
