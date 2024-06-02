@@ -5,13 +5,13 @@ int simulationRes;
 Grid3D mainGrid;
 Slicer mainSlicer;
 
-int iRes = 30;
-int jRes = 1;
-int kRes = 30;
+int iRes = 20;
+int jRes = 20;
+int kRes = 20;
 
-float unit = 1E-9;
+float unit = 0.0001;
 
-int currSlice = 0;
+int currSlice = 5;
 
 /* UI */
 ControlP5 mainUi;
@@ -96,7 +96,7 @@ public void setup() {
                          1.0,
                          color(255),
                          'd',
-                         8.8541878188E-12, Double.valueOf(1E-9), null
+                         8.8541878188E-12, Double.valueOf(1), null
                          );
   
   //mainGrid.addObject(sphere);

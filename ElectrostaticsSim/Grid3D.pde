@@ -160,11 +160,11 @@ public class Grid3D {
           //System.out.println(initGrid[i][j][k].getCharge());
           if (initGrid[i][j][k].getCharge() == null) {
             swapTracker[index] = true;
-            yVector.set(index, 0, (-1)*initGrid[i][j][k].getPotential().doubleValue());
+            yVector.set(index, 0, initGrid[i][j][k].getPotential().doubleValue());
           } 
           else {
             swapTracker[index] = false;
-            yVector.set(index, 0, initGrid[i][j][k].getCharge().doubleValue());
+            yVector.set(index, 0, -initGrid[i][j][k].getCharge().doubleValue()/initGrid[i][j][k].getPerm());
           }
         }
       }
@@ -178,60 +178,28 @@ public class Grid3D {
       for (int j=0; j<jRes+2; j++) {
         for (int k=0; k<kRes+2; k++) {
           int index = getIndex(i, j, k);
-          if (swapTracker[index] == true) {
+          if ((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1)) {
+            coeffMatrix.set(index, getIndex(i, j, k), 1);
+          }
+          else if (swapTracker[index] == true) {
+            coeffMatrix.set(index, getIndex(i, j, k), pow(size, 2)/(6.0*initGrid[i][j][k].getPerm()));
+            coeffMatrix.set(index, getIndex(i+1, j, k), 1/(6.0));
+            coeffMatrix.set(index, getIndex(i-1, j, k), 1/(6.0));
+            coeffMatrix.set(index, getIndex(i, j+1, k), 1/(6.0));
+            coeffMatrix.set(index, getIndex(i, j-1, k), 1/(6.0));
+            coeffMatrix.set(index, getIndex(i, j, k+1), 1/(6.0));
+            coeffMatrix.set(index, getIndex(i, j, k-1), 1/(6.0));
+          } 
+          else {
             /* V */
-            coeffMatrix.set(index, getIndex(i, j, k), 1/(6.0));
-            /* V(i+d) */
-            if (i < iRes+1) {
-              coeffMatrix.set(index, getIndex(i+1, j, k), solvedGrid[i+1][j][k].getPerm()/6);
-            }
-            /* V(i-d) */
-            if (i > 0) {
-              coeffMatrix.set(index, getIndex(i-1, j, k), solvedGrid[i-1][j][k].getPerm()/6);
-            }
-            /* V(j+d) */
-            if (j < jRes+1) {
-              coeffMatrix.set(index, getIndex(i, j+1, k), solvedGrid[i][j+1][k].getPerm()/6);
-            }
-            /* V(j-d) */
-            if (j > 0) {
-              coeffMatrix.set(index, getIndex(i, j-1, k), solvedGrid[i][j-1][k].getPerm()/6);
-            }
-            /* V(k+d) */
-            if (k < kRes+1) {
-              coeffMatrix.set(index, getIndex(i, j, k+1), solvedGrid[i][j][k+1].getPerm()/6);
-            }
-            /* V(k-d) */
-            if (k > 0) {
-              coeffMatrix.set(index, getIndex(i, j, k-1), solvedGrid[i][j][k-1].getPerm()/6);
-            }
-          } else {
-            /* V */
-            coeffMatrix.set(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
-            /* V(i+d) */
-            if (i < iRes+1) {
-              coeffMatrix.set(index, getIndex(i+1, j, k), -solvedGrid[i+1][j][k].getPerm()/pow(solvedGrid[i+1][j][k].getSize(), 2));
-            }
-            /* V(i-d) */
-            if (i > 0) {
-              coeffMatrix.set(index, getIndex(i-1, j, k), -solvedGrid[i-1][j][k].getPerm()/pow(solvedGrid[i-1][j][k].getSize(), 2));
-            }
-            /* V(j+d) */
-            if (j < jRes+1) {
-              coeffMatrix.set(index, getIndex(i, j+1, k), -solvedGrid[i][j+1][k].getPerm()/pow(solvedGrid[i][j+1][k].getSize(), 2));
-            }
-            /* V(j-d) */
-            if (j > 0) {
-              coeffMatrix.set(index, getIndex(i, j-1, k), -solvedGrid[i][j-1][k].getPerm()/pow(solvedGrid[i][j-1][k].getSize(), 2));
-            }
-            /* V(k+d) */
-            if (k < kRes+1) {
-              coeffMatrix.set(index, getIndex(i, j, k+1), -solvedGrid[i][j][k+1].getPerm()/pow(solvedGrid[i][j][k+1].getSize(), 2));
-            }
-            /* V(k-d) */
-            if (k > 0) {
-              coeffMatrix.set(index, getIndex(i, j, k-1), -solvedGrid[i][j][k-1].getPerm()/pow(solvedGrid[i][j][k-1].getSize(), 2));
-            }
+            coeffMatrix.set(index, getIndex(i, j, k), -6/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i+1, j, k), 1/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i-1, j, k), 1/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j+1, k), 1/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j-1, k), 1/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j, k+1), 1/pow(size, 2));
+            coeffMatrix.set(index, getIndex(i, j, k-1), 1/pow(size, 2));
+
           }
         }
       }
@@ -254,16 +222,25 @@ public class Grid3D {
         for (int k=0; k<kRes+2; k++) {
           if (!((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1))) {
             int index = getIndex(i, j, k);
+            float perm = solvedGrid[i][j][k].getPerm();
             if (swapTracker[index] == true) {
-              solvedGrid[i][j][k].setCharge(Double.valueOf(solnVector.get(index, 0)));
-            } else {
+              solvedGrid[i][j][k].setCharge(Double.valueOf(solnVector.get(index, 0)*perm));
+            } 
+            else {
               solvedGrid[i][j][k].setPotential(Double.valueOf(solnVector.get(index, 0)));
             }
           }
         }
       }
     }
-
+    /*
+    for (int i=0; i<cubeRes; i++) {
+      for (int j=0; j<cubeRes; j++) {
+        System.out.print(String.format("%3.1f, ", coeffMatrix.get(i, j)));
+      }
+      System.out.println();
+    }
+    */
     long end1 = System.nanoTime();
     System.out.println("T1: " + ((float)(end1 - start1))/pow(10, 9));
     System.out.println("T2: " + ((float)(end2 - start2))/pow(10, 9));

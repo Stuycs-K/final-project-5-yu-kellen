@@ -132,7 +132,7 @@ public class Screen2D extends PApplet {
   
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
-    
+    /*
     
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
@@ -142,7 +142,7 @@ public class Screen2D extends PApplet {
     }
     
     
-    
+    */
   }
   
   public void updateMinMaxes() {
@@ -150,7 +150,7 @@ public class Screen2D extends PApplet {
     maxP = grid.getMaxSolvedPotential();
     minC = grid.getMinSolvedCharge();
     maxC = grid.getMaxSolvedCharge();
-    System.out.println(String.format("P: %e, %e V: %e, %e", minP, maxP, minC, maxC));
+    System.out.println(String.format("P: %ev, %ev C: %ec, %ec", minP, maxP, minC, maxC));
   }
   
 }
