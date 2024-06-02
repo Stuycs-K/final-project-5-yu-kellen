@@ -1,4 +1,8 @@
-import static jeigen.Shortcuts.*;
+import org.ejml.simple.SimpleMatrix;
+import org.ejml.data.DMatrixSparseCSC;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.sparse.csc.CommonOps_DSCC;
+
 import java.util.*;
 
 public class Grid3D {
@@ -9,21 +13,21 @@ public class Grid3D {
   /* z, y, x */
   private Cell initGrid[][][];
   private Cell solvedGrid[][][];
-  
+
   /* colleciton of objects */
   private ArrayList<CellObj> objList;
-  
+
   /* initRes > initSize, initSize must be divisible by initRes */
   public Grid3D(int initIRes, int initJRes, int initKRes, float initSize) {
     iRes = initIRes;
     jRes = initJRes;
     kRes = initKRes;
     size = initSize;
-    
+
     /* initialize grid */
     /* edges not included */
     initGrid = new Cell[iRes+2][jRes+2][kRes+2];
-    
+
     /* initialize grid cells */
     for (int i=0; i<iRes+2; i++) {
       for (int j=0; j<jRes+2; j++) {
@@ -31,42 +35,41 @@ public class Grid3D {
           /* Boundary conditions */
           if ((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1)) {
             initGrid[i][j][k] = new Cell(
-                                    new PVector(i*size, j*size, k*size), 
-                                    size,
-                                    color(0),
-                                    Double.valueOf(0),
-                                    Double.valueOf(0),
-                                    Cell.pVacuum,
-                                    new PVector(0, 0, 0)
-                                    );
-          }
-          else {  
+              new PVector(i*size, j*size, k*size),
+              size,
+              color(0),
+              Double.valueOf(0),
+              Double.valueOf(0),
+              Cell.pVacuum,
+              new PVector(0, 0, 0)
+              );
+          } else {
             initGrid[i][j][k] = new Cell(
-                                     new PVector(i*size, j*size, k*size), 
-                                     size
-                                     );
+              new PVector(i*size, j*size, k*size),
+              size
+              );
           }
         }
       }
     }
   }
-  
-  
-  
+
+
+
   /* solve Poisson's equations using FDM for p, V, and E */
   public void solveSystem() {
     long start1 = System.nanoTime();
     int cubeRes = (iRes+2)*(jRes+2)*(kRes+2);
     solvedGrid = new Cell[iRes+2][jRes+2][kRes+2];
-    
+
     /* potential is the main unknown quantity */
-    DenseMatrix coeffMatrix = zeros(cubeRes, cubeRes);
-    DenseMatrix yVector = zeros(cubeRes, 1);
-    DenseMatrix solnVector;
-   
-   /* tracks if charge and potential are swapped */
+    DMatrixSparseCSC coeffMatrix = new DMatrixSparseCSC (cubeRes, cubeRes, 8*cubeRes);
+    DMatrixRMaj yVector = new DMatrixRMaj(cubeRes, 1);
+    DMatrixRMaj solnVector = new DMatrixRMaj(cubeRes, 1);
+
+    /* tracks if charge and potential are swapped */
     boolean[] swapTracker = new boolean[cubeRes];
-    
+
     long start2 = System.nanoTime();
 
     for (int i=0; i<iRes+2; i++) {
@@ -74,24 +77,23 @@ public class Grid3D {
         for (int k=0; k<kRes+2; k++) {
           int index = getIndex(i, j, k);
           solvedGrid[i][j][k] = new Cell(initGrid[i][j][k]);
-          
+
           /* potential != null */
           //System.out.println(initGrid[i][j][k].getCharge());
           if (initGrid[i][j][k].getCharge() == null) {
             swapTracker[index] = true;
-            yVector.set(index, (-1)*initGrid[i][j][k].getPotential().doubleValue());
-          }
-          else {
+            yVector.set(index, 0, (-1)*initGrid[i][j][k].getPotential().doubleValue());
+          } else {
             swapTracker[index] = false;
-            yVector.set(index, initGrid[i][j][k].getCharge().doubleValue());
-          } 
+            yVector.set(index, 0, initGrid[i][j][k].getCharge().doubleValue());
+          }
         }
       }
     }
-    
+
     long end2 = System.nanoTime();
     long start3 = System.nanoTime();
-    
+
     /* init CoeffMatrix */
     for (int i=0; i<iRes+2; i++) {
       for (int j=0; j<jRes+2; j++) {
@@ -124,8 +126,7 @@ public class Grid3D {
             if (k > 0) {
               coeffMatrix.set(index, getIndex(i, j, k-1), solvedGrid[i][j][k-1].getPerm()/6);
             }
-          }
-          else { 
+          } else {
             /* V */
             coeffMatrix.set(index, getIndex(i, j, k), 6*solvedGrid[i][j][k].getPerm()/pow(solvedGrid[i][j][k].getSize(), 2));
             /* V(i+d) */
@@ -156,57 +157,56 @@ public class Grid3D {
         }
       }
     }
-  
-    long end3 = System.nanoTime();
-    
-    long start4 = System.nanoTime();
-    
-   /* solve! */
 
-   solnVector = coeffMatrix.ldltSolve(yVector);
-   
-   long end4 = System.nanoTime();
-   
-   
-   /* update solved grid */
-   for (int i=0; i<iRes+2; i++) {
+    long end3 = System.nanoTime();
+
+    long start4 = System.nanoTime();
+
+    /* solve! */
+    
+    CommonOps_DSCC.solve(coeffMatrix, yVector, solnVector);
+
+    long end4 = System.nanoTime();
+
+
+    /* update solved grid */
+    for (int i=0; i<iRes+2; i++) {
       for (int j=0; j<jRes+2; j++) {
         for (int k=0; k<kRes+2; k++) {
           if (!((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1))) {
             int index = getIndex(i, j, k);
             if (swapTracker[index] == true) {
               solvedGrid[i][j][k].setCharge(Double.valueOf(solnVector.get(index, 0)));
-            }
-            else {
+            } else {
               solvedGrid[i][j][k].setPotential(Double.valueOf(solnVector.get(index, 0)));
             }
           }
         }
       }
     }
-    
-  long end1 = System.nanoTime();
-  System.out.println("T1: " + ((float)(end1 - start1))/pow(10, 9));
-  System.out.println("T2: " + ((float)(end2 - start2))/pow(10, 9));
-  System.out.println("T3: " + ((float)(end3 - start3))/pow(10, 9));
-  System.out.println("T4: " + ((float)(end4 - start4))/pow(10, 9));
-  System.out.println("DONE");
-}
-  
 
-  
+    long end1 = System.nanoTime();
+    System.out.println("T1: " + ((float)(end1 - start1))/pow(10, 9));
+    System.out.println("T2: " + ((float)(end2 - start2))/pow(10, 9));
+    System.out.println("T3: " + ((float)(end3 - start3))/pow(10, 9));
+    System.out.println("T4: " + ((float)(end4 - start4))/pow(10, 9));
+    System.out.println("DONE");
+  }
+
+
+
   public int getIndex(int i, int j, int k) {
     return i + (iRes+2)*j + (iRes+2)*(jRes+2)*k;
   }
-  
-  /* changes size of grid */ 
+
+  /* changes size of grid */
   public void changeSize() {
   }
-  
-  public Cell getSolvedCell(int i, int j, int k) { 
+
+  public Cell getSolvedCell(int i, int j, int k) {
     return solvedGrid[i+1][j+1][k+1];
   }
-  
+
   public float getMaxSolvedPotential() {
     float max = (float)getSolvedCell(0, 0, 0).getPotential().doubleValue();
     for (int i=0; i<iRes; i++) {
@@ -221,8 +221,8 @@ public class Grid3D {
     }
     return max;
   }
-  
-  
+
+
   public float getMinSolvedPotential() {
     float min = (float)getSolvedCell(0, 0, 0).getPotential().doubleValue();
     for (int i=0; i<iRes; i++) {
@@ -237,7 +237,7 @@ public class Grid3D {
     }
     return min;
   }
-  
+
   public float getMaxSolvedCharge() {
     float max = (float)getSolvedCell(0, 0, 0).getCharge().doubleValue();
     for (int i=0; i<iRes; i++) {
@@ -252,7 +252,7 @@ public class Grid3D {
     }
     return max;
   }
-  
+
   public float getMinSolvedCharge() {
     float min = (float)getSolvedCell(0, 0, 0).getCharge().doubleValue();
     for (int i=0; i<iRes; i++) {
@@ -267,21 +267,20 @@ public class Grid3D {
     }
     return min;
   }
-  
-  public Cell getInitCell(int i, int j, int k) { 
+
+  public Cell getInitCell(int i, int j, int k) {
     return initGrid[i+1][j+1][k+1];
   }
-  
+
   public int getIRes() {
     return iRes;
   }
-  
-   public int getjRes() {
+
+  public int getjRes() {
     return jRes;
   }
-  
-   public int getkRes() {
+
+  public int getkRes() {
     return kRes;
   }
-  
 }

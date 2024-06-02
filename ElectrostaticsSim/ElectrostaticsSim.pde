@@ -5,11 +5,11 @@ int simulationRes;
 Grid3D mainGrid;
 Slicer mainSlicer;
 
-int iRes = 21;
-int jRes = 21;
-int kRes = 21;
+int iRes = 100;
+int jRes = 1;
+int kRes = 100;
 
-int currSlice = 21/2;
+int currSlice = 0;
 
 /* UI */
 ControlP5 mainUi;
@@ -36,7 +36,7 @@ public void setup() {
   /* init ui */
   mainUi = new ControlP5(this);
   mainGrid = new Grid3D(iRes, jRes, kRes, 0.002);
-  mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 20);
+  mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 10);
   mainSlicer = new Slicer(mainGrid);
   
   for (int i=0; i<iRes; i++) {
@@ -49,10 +49,10 @@ public void setup() {
   }
   
   mainGrid.getInitCell(7, jRes/2, 7).setPotential(null);
-  mainGrid.getInitCell(7, jRes/2, 7).setCharge(Double.valueOf(10E-9));
+  mainGrid.getInitCell(7, jRes/2, 7).setCharge(Double.valueOf(10E-8));
   
   mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setPotential(null);
-  mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setCharge(Double.valueOf(-10E-9));
+  mainGrid.getInitCell(iRes-8, jRes/2, iRes-8).setCharge(Double.valueOf(-10E-8));
   
   mainGrid.solveSystem();
   
