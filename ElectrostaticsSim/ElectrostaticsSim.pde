@@ -6,7 +6,7 @@ Grid3D mainGrid;
 Slicer mainSlicer;
 
 int iRes = 100;
-int jRes = 1;
+int jRes = 0;
 int kRes = 100;
 
 int currSlice = 0;

@@ -53,6 +53,41 @@ public class Grid3D {
       }
     }
   }
+  
+  //set everything to a vaccumm and of charge zero, field zero. Potential is unknown
+  public void clearGrid() {
+    for (int i=0; i<iRes+2; i++) {
+      for (int j=0; j<jRes+2; j++) {
+        for (int k=0; k<kRes+2; k++) {
+          /* Boundary conditions */
+          if ((i==0)||(j==0)||(k==0)||(i==iRes+1)||(j==jRes+1)||(k==kRes+1)) {
+            initGrid[i][j][k] = new Cell(
+              new PVector(i*size, j*size, k*size),
+              size,
+              color(0),
+              Double.valueOf(0),
+              Double.valueOf(0),
+              Cell.pVacuum,
+              new PVector(0, 0, 0)
+              );
+          } else {
+            initGrid[i][j][k] = new Cell(
+              new PVector(i*size, j*size, k*size),
+              size
+              );
+          }
+        }
+      }
+    }
+  }
+  
+  /
+  public void drawObjects() {
+    clearGrid();
+    for (CellOb
+    
+    
+  }
 
 
 
@@ -197,10 +232,6 @@ public class Grid3D {
 
   public int getIndex(int i, int j, int k) {
     return i + (iRes+2)*j + (iRes+2)*(jRes+2)*k;
-  }
-
-  /* changes size of grid */
-  public void changeSize() {
   }
 
   public Cell getSolvedCell(int i, int j, int k) {
