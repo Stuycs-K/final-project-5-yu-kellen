@@ -128,6 +128,7 @@ void controlEvent(ControlEvent event) {
     mainUi.getController("currentSlice").setBroadcast(false);
     mainUi.getController("currentSlice").setValue(0);
     sliceOptions = (char)event.getValue();
+    mainScreen2D.setSliceMode(sliceOptions);
     currentSlice = 0;
     mainUi.getController("currentSlice").setMin(0);
     mainUi.getController("currentSlice").setMax((float)mainGrid.getRes(sliceOptions));

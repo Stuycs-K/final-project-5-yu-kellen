@@ -49,6 +49,7 @@ public class Screen2D extends PApplet {
   private Grid3D grid;
  
   private char renderMode;
+  private char sliceMode;
   
  /*
   .addItem("Field Vectors", 'v')
@@ -75,6 +76,7 @@ public class Screen2D extends PApplet {
     scale = initScale;
     screenRes = max(max(iRes, jRes), jRes);
     renderMode = 'p';
+    sliceMode = 'j';
     buffer = new Cell[screenRes][screenRes];
     PApplet.runSketch(new String[]{this.getClass().getName()}, this);
   }
@@ -94,6 +96,11 @@ public class Screen2D extends PApplet {
     float val;
     float ratio;
     color colorVal;
+    PVector eField;
+    float xDir;
+    float yDir;
+    int xPos;
+    int yPos;
     fill(color(0));
     stroke(color(0));
     rect(0, 0, width, height);
@@ -102,7 +109,22 @@ public class Screen2D extends PApplet {
         for (int j=0; j<buffer[i].length; j++) {  
           switch (renderMode) {
             case 'v':
-              
+              eField = buffer[i][j].getEField();
+              switch(sliceMode) {
+                case 'i':
+                  xDir = eField.y;
+                  yDir = eField.z;
+                  break;
+                case 'j':
+                  xDir = eField.x;
+                  yDir = eField.z;
+                  break;
+                case 'k':
+                  xDir = eField.x;
+                  yDir = eField.y;
+                  break;
+                
+              }
               break;
             case 'l':
               break;
@@ -186,6 +208,10 @@ public class Screen2D extends PApplet {
   
   public void setMode(char newMode) {
     renderMode = newMode;
+  }
+  
+  public void setSliceMode(char newMode) {
+    sliceMode = newMode;
   }
   
   public void updateBuffer(Cell[][] newBuffer) {

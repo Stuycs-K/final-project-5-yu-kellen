@@ -235,21 +235,24 @@ public class Grid3D {
     
     /* solve for field  -E = grad V */
     for (int i=1; i<iRes+1; i++) {
-      for (int j=1; j<Res+1; j++) {
-        for (int k=1; k<Res+1; k++) {
+      for (int j=1; j<jRes+1; j++) {
+        for (int k=1; k<kRes+1; k++) {
           float dVx = (float)(solvedGrid[i-1][j][k].getPotential().doubleValue() - 
-                              2*SolvedGrid[i][j][k].getPotential().doubleValue() +
+                              2*solvedGrid[i][j][k].getPotential().doubleValue() +
                               solvedGrid[i+1][j][k].getPotential().doubleValue())/pow(size, 2);
                               
           float dVy = (float)(solvedGrid[i][j-1][k].getPotential().doubleValue() - 
-                              2*SolvedGrid[i][j][k].getPotential().doubleValue() +
+                              2*solvedGrid[i][j][k].getPotential().doubleValue() +
                               solvedGrid[i][j+1][k].getPotential().doubleValue())/pow(size, 2);
           
           float dVz = (float)(solvedGrid[i][j][k-1].getPotential().doubleValue() - 
-                              2*SolvedGrid[i][j][k].getPotential().doubleValue() +
+                              2*solvedGrid[i][j][k].getPotential().doubleValue() +
                               solvedGrid[i][j][k+1].getPotential().doubleValue())/pow(size, 2);
                               
-          solvedGrid[i][j][k].SetEField(new PVector(-dVx, -dVy, -dVz));
+          solvedGrid[i][j][k].setEField(new PVector(-dVx, -dVy, -dVz));
+        }
+      }
+    }
         
     /*
     for (int i=0; i<cubeRes; i++) {
