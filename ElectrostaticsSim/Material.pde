@@ -6,8 +6,8 @@ public class Material {
   private String name;
   
   public Material(
-    String initName, char initType, 
-    float initPerm, Double initCharge, Double initPotential
+    String initName, float initPerm, 
+    char initType, Double initCharge, Double initPotential
     )
   {
     name = initName;

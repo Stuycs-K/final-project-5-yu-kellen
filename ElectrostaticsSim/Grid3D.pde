@@ -96,13 +96,11 @@ public class Grid3D {
   public void drawObjects() {
     clearGrid();
     for (CellObj obj : objList) {
-      System.out.println(obj);
       for (int i=0; i<iRes; i++) {
         for (int j=0; j<jRes; j++) {
           for (int k=0; k<kRes; k++) {
             Cell cell = getInitCell(i, j, k);
             PVector pos = cell.getCenterPos();
-            //System.out.println(pos);
             float x = pos.x;
             float y = pos.y;
             float z = pos.z;
@@ -234,6 +232,25 @@ public class Grid3D {
         }
       }
     }
+    
+    /* solve for field  -E = grad V */
+    for (int i=1; i<iRes+1; i++) {
+      for (int j=1; j<Res+1; j++) {
+        for (int k=1; k<Res+1; k++) {
+          float dVx = (float)(solvedGrid[i-1][j][k].getPotential().doubleValue() - 
+                              2*SolvedGrid[i][j][k].getPotential().doubleValue() +
+                              solvedGrid[i+1][j][k].getPotential().doubleValue())/pow(size, 2);
+                              
+          float dVy = (float)(solvedGrid[i][j-1][k].getPotential().doubleValue() - 
+                              2*SolvedGrid[i][j][k].getPotential().doubleValue() +
+                              solvedGrid[i][j+1][k].getPotential().doubleValue())/pow(size, 2);
+          
+          float dVz = (float)(solvedGrid[i][j][k-1].getPotential().doubleValue() - 
+                              2*SolvedGrid[i][j][k].getPotential().doubleValue() +
+                              solvedGrid[i][j][k+1].getPotential().doubleValue())/pow(size, 2);
+                              
+          solvedGrid[i][j][k].SetEField(new PVector(-dVx, -dVy, -dVz));
+        
     /*
     for (int i=0; i<cubeRes; i++) {
       for (int j=0; j<cubeRes; j++) {
@@ -324,7 +341,19 @@ public class Grid3D {
   public Cell getInitCell(int i, int j, int k) {
     return initGrid[i+1][j+1][k+1];
   }
-
+  
+  public int getRes(char mode) {
+    switch(mode) {
+      case 'i':
+        return iRes;
+     case 'j':
+        return jRes;
+     case 'k':
+        return kRes;
+     default:
+        return 0;
+    }
+  }
   public int getIRes() {
     return iRes;
   }

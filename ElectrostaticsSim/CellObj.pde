@@ -157,7 +157,7 @@ public class CellObj {
       boolean onOuter = ((abs(x - xMin) < tol) || (abs(x - xMax) < tol)) ||
                         ((abs(y - yMin) < tol) || (abs(y - yMax) < tol)) || 
                         ((abs(z - zMin) < tol) || (abs(z - zMax) < tol));
-            System.out.println(onOuter);
+                        
       return (onInner || onOuter);
     }
   }
@@ -166,7 +166,6 @@ public class CellObj {
     return type;
   }
  
-  
   public float getXMin() {
     return xMin;
   }

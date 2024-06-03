@@ -1,157 +1,159 @@
 import controlP5.*;
+import java.io.File;
 
-int simulationRes;
-
+/* simulation inner workings */
 Grid3D mainGrid;
 Slicer mainSlicer;
-
-int iRes = 20;
-int jRes = 20;
-int kRes = 20;
-
-float unit = 0.001;
-
-int currSlice = 5;
+Screen2D mainScreen2D;
+Interpreter mainInterpreter;
 
 /* UI */
 ControlP5 mainUi;
-Screen2D mainScreen2D;
+File selectedFile;
+
+RadioButton sliceButton;
+RadioButton renderButton;
+
+/* mechanics */
+char renderOptions = 'p';
+char sliceOptions = 'j';
+int currentSlice = 0;
+int sliceMin=0, sliceMax=0;
+
 
 /* Default Fonts */
 HashMap<String, PFont> fontMap;
 
-/* Fun */
-PImage backGroundImg;
-/*
-public CellObj(
-    PVector initPos,
-    float initXCoeff, float initYCoeff, float initZCoeff,
-    float initXPow, float initYPow, float initZPow,
-    float initXMin, float initXMax,
-    float initYMin, float initYMax,
-    float initZMin, float initZMax,
-    boolean initUseExclusion,
-    float initXEMin, float initXEMax,
-    float initYEMin, float initYEMax,
-    float initZEMin, float initZEMax,
-    float initRadiusMin, float initRadiusMax,
-    float initRadiusPow,
-    color initColr,
-    char initType,
-    float initPerm, Double initCharge, Double initPotential
-  ) 
-  
-*/
 public void setup() {
-  size(10, 10);
+  size(400, 300);
+  mainInterpreter = new Interpreter(this);
+  mainUi = new ControlP5(this);
   surface.setAlwaysOnTop(true);
-
+  
   /* init fonts */
   fontMap = new HashMap<String, PFont>();
   fontMap.put("h1", createFont("JetBrainsMono.ttf", 24, true));
   fontMap.put("h2", createFont("JetBrainsMono.ttf", 20, true));
   fontMap.put("h3", createFont("JetBrainsMono.ttf", 14, true));
   fontMap.put("p", createFont("JetBrainsMono.ttf", 12, true));
+  
+  // Button to open file
+  mainUi.addButton("openFile")
+     .setPosition(20, 20)
+     .setSize(360, 30) // Same width as the submit button
+     .setLabel("Open File to Run")
+     .onClick(new CallbackListener() {
+       public void controlEvent(CallbackEvent event) {
+         selectInput("Select a file to open:", "fileSelected");
+       }
+     });
 
-  /* init ui */
-  mainUi = new ControlP5(this);
-  mainGrid = new Grid3D(iRes, jRes, kRes, unit);
-  mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 30);
-  mainSlicer = new Slicer(mainGrid);
+  // Textfield to show the file path
+  mainUi.addTextfield("filePathField")
+     .setPosition(20, 60)
+     .setSize(360, 30)
+     .setColor(color(255))
+     .setText("") // Remove default text
+     .setAutoClear(false)
+     .setLock(true) // Make the text field read-only
+     .getCaptionLabel().setVisible(false);
+
+ sliceButton = mainUi.addRadioButton("sliceOptions")
+     .setPosition(20, 145)
+     .setSize(30, 30)
+     .setColorForeground(color(120))
+     .setColorActive(color(255))
+     .setColorLabel(color(255))
+     .setItemsPerRow(1)
+     .setSpacingColumn(30)
+     .addItem("Slice X", 'i')
+     .addItem("Slice Y", 'j')
+     .addItem("Slice Z", 'k');
+     
+
+  // Second Radio Button List
+  renderButton = mainUi.addRadioButton("renderOptions")
+     .setPosition(220, 145) // Positioned a bit more up
+     .setSize(30, 30) // Made bigger
+     .setColorForeground(color(120))
+     .setColorActive(color(255))
+     .setColorLabel(color(255))
+     .setItemsPerRow(1)
+     .setSpacingColumn(30)
+     .addItem("Electric Field", 'v')
+     .addItem("Potential", 'p')
+     .addItem("Charge", 'c');
+
+  // Horizontal Slider (called "slice")
+  mainUi.addSlider("currentSlice")
+     .setBroadcast(false)
+     .setPosition(20, 255) // Moved a bit more up
+     .setSize(330, 30) // Made shorter horizontally
+     .setRange(0, 100)
+     .setValue(50)
+     .setLabel("Slice")
+     .setSliderMode(Slider.FLEXIBLE)
+     .setDecimalPrecision(0)
+     .addListener(new ControlListener() {
+       public void controlEvent(ControlEvent event) {
+         if (event.isFrom(mainUi.getController("currentSlice")) && (mainScreen2D != null)) {
+           mainScreen2D.updateBuffer(mainSlicer.getSlice(sliceOptions, true, currentSlice));
+         }
+       }
+     })
+     .setBroadcast(true);
+     
+  // Submit Button
+  mainUi.addButton("run")
+     .setPosition(20, 100)
+     .setSize(360, 30)
+     .setLabel("run")
+     .onClick(new CallbackListener() {
+       public void controlEvent(CallbackEvent event) {
+         mainInterpreter.run(selectedFile);
+         mainGrid = mainInterpreter.getGrid();
+         mainSlicer = mainInterpreter.getSlicer();
+         mainScreen2D = mainInterpreter.getScreen2D();
+         mainUi.getController("currentSlice").setValue(0);
+         mainUi.getController("currentSlice").setMin(0);
+         mainUi.getController("currentSlice").setMax((float)mainGrid.getjRes());
+       }
+     });
+           
   
-  
-  CellObj sphere = new CellObj(
-                         unit,
-                         new PVector(0, 0, 0),
-                         1.0, 1.0, 1.0,
-                         2.0, 2.0, 2.0,
-                         -4*unit, 0*unit,
-                         -2.5*unit, 2.5*unit,
-                         -2.5*unit, 2.5*unit,
-                         false,
-                         -7*unit, 7*unit,
-                         -7*unit, 7*unit,
-                         -7*unit, 7*unit,
-                         false,
-                         5*unit, 12*unit,
-                         1.0,
-                         color(255),
-                         'c',
-                         8.8541878188E-12, null, Double.valueOf(0)
-                         );
-                         
-  CellObj ball = new CellObj(
-                         unit,
-                         new PVector(2*unit, 0, 0),
-                         1.0, 1.0, 1.0,
-                         2.0, 2.0, 2.0,
-                         -10.0, 10.0,
-                         -10.0, 10.0,
-                         -10.0, 10.0,
-                         false,
-                         -5*unit, 5*unit,
-                         -5*unit, 5*unit,
-                         -5*unit, 5*unit,
-                         true,
-                         0*unit, 0*unit,
-                         1.0,
-                         color(255),
-                         'd',
-                         8.8541878188E-12, Double.valueOf(20), null
-                         );
-  
-  
-  mainGrid.addObject(sphere);
-  mainGrid.addObject(ball);
-  mainGrid.drawObjects();
-  
-  mainGrid.solveSystem();
-  
-  mainScreen2D.setMode('c');
-  mainScreen2D.updateMinMaxes();
-  mainScreen2D.updateBuffer(mainSlicer.getSlice('i', true, jRes/2));
-  
- 
-  
-  /* fun */
-  /*
-  backGroundImg = loadImage("greenFN.jpg");
-  backGroundImg.resize(200, 200);
-  image(backGroundImg, 0, 0);
-  
-  /* title * /
-  System.out.println(fontMap.get("h1"));
-  Textlabel title = mainUi.addTextlabel("Title")
-                          .setText("Green FN Electrostatics Simulator")
-                          .setColor(color(255, 200, 0))
-                          .setFont(fontMap.get("h1"))
-                          .setPosition(width/2 - 300, 25);
-                          
-  */
 }
 
-void keyPressed() {
-  switch (key) {
-    case 'w':
-      currSlice++;
-      currSlice %= jRes;
-      mainScreen2D.updateBuffer(mainSlicer.getSlice('i', true, currSlice));
-      System.out.println(currSlice);
-      break;
-    case 's':
-      currSlice--;
-      if (currSlice < 0) {
-        currSlice = jRes-1;
-      }
-      mainScreen2D.updateBuffer(mainSlicer.getSlice('i', true, currSlice));
-      System.out.println(currSlice);
-      break;
-    default:
-      break;
+void controlEvent(ControlEvent event) {
+  if (event.isFrom(sliceButton) && (mainScreen2D != null)) {
+    mainUi.getController("currentSlice").setBroadcast(false);
+    mainUi.getController("currentSlice").setValue(0);
+    sliceOptions = (char)event.getValue();
+    currentSlice = 0;
+    mainUi.getController("currentSlice").setMin(0);
+    mainUi.getController("currentSlice").setMax((float)mainGrid.getRes(sliceOptions));
+    mainUi.getController("currentSlice").setBroadcast(true);
+  }
+  if (event.isFrom(renderButton) && (mainScreen2D != null)) {
+    mainUi.getController("currentSlice").setBroadcast(false);
+    renderOptions = (char)event.getValue();
+    mainScreen2D.setMode(renderOptions);
+    mainUi.getController("currentSlice").setBroadcast(true);
   }
 }
 
-
 public void draw() {
-  
+}
+
+void fileSelected(File selection) {
+  if (selection != null) {
+    selectedFile = selection;
+    String filePath = selectedFile.getAbsolutePath();
+    
+    Textfield filePathField = mainUi.get(Textfield.class, "filePathField");
+    if (filePathField != null) {
+      filePathField.setText(filePath);
+    } else {
+      println("Error: Textfield 'filePathField' not found.");
+    }
+  }
 }

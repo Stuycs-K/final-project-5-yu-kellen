@@ -1,0 +1,8 @@
+BEGIN 21 21 21 .001 20
+MAT posCharge 8.85418782E-12 d 100
+MAT negCharge 8.85418782E-12 d -100
+MAT neutral 8.85418782E-12 c 0
+BOX posCharge -10 0 0 1 50 50
+BOX negCharge 10 0 0 1 50 50
+SPHERE neutral 0 0 0 4
+SOLVE

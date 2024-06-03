@@ -102,12 +102,20 @@ public class Screen2D extends PApplet {
         for (int j=0; j<buffer[i].length; j++) {  
           switch (renderMode) {
             case 'v':
+              
               break;
             case 'l':
               break;
             case 'p':
               val = (float)buffer[i][j].getPotential().doubleValue();
               ratio = map(val, minP, maxP, 0, 1);
+              ratio = pow(ratio, 0.5);
+              if (ratio > 1) {
+                ratio = 1;
+              }
+              if (ratio < 0) {
+                ratio = 0;
+              }
               colorVal = potentialColors[int(ratio*(colorRes-1))];
               fill(colorVal);
               stroke(colorVal);
@@ -119,7 +127,14 @@ public class Screen2D extends PApplet {
               break;
             case 'c':
               val = (float)buffer[i][j].getCharge().doubleValue();
-              ratio = logNorm(val, minC, maxC);
+              ratio = map(val, minC, maxC, 0, 1);
+              ratio = pow(ratio, 0.5);
+              if (ratio >= 1) {
+                ratio = 1;
+              }
+              if (ratio <= 0) {
+                ratio = 0;
+              }
               colorVal = chargeColors[int(ratio*(colorRes-1))];
               fill(colorVal);
               stroke(colorVal);
@@ -176,14 +191,14 @@ public class Screen2D extends PApplet {
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
     
-    
+    /*
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
         System.out.print(String.format("%3.2e, ", buffer[i][j].getCharge().doubleValue()));
       }
       System.out.println();
     }
-    
+    */
     
   }
   
@@ -215,19 +230,5 @@ public class Screen2D extends PApplet {
     int b = int(lerp(c1[2], c2[2], weight));
     return color(r, g, b);
   }
-  
-  private float logNorm(float value, float vmin, float vmax) {
-        if (vmin == 0 || vmax == 0 || vmin == vmax) {
-            vmax = 1;
-            vmin = -1;
-        }
-        
-        float scale = log(abs(vmax)/abs(vmin));
-        float sign = Math.signum(value);
-        float normalizedValue = (log(abs(value)/abs(vmin)))/ scale;
-        return sign * normalizedValue;
-    }
-  
-  
   
 }
