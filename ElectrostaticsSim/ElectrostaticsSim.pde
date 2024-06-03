@@ -9,7 +9,7 @@ int iRes = 20;
 int jRes = 20;
 int kRes = 20;
 
-float unit = 1E-6;
+float unit = 0.001;
 
 int currSlice = 5;
 
@@ -59,15 +59,16 @@ public void setup() {
   mainScreen2D = new Screen2D(this, mainGrid, iRes, jRes, kRes, 30);
   mainSlicer = new Slicer(mainGrid);
   
+  
   CellObj sphere = new CellObj(
                          unit,
                          new PVector(0, 0, 0),
                          1.0, 1.0, 1.0,
                          2.0, 2.0, 2.0,
-                         -20*unit, 20*unit,
-                         -20*unit, 20*unit,
-                         -20*unit, 20*unit,
-                         true,
+                         -4*unit, 0*unit,
+                         -2.5*unit, 2.5*unit,
+                         -2.5*unit, 2.5*unit,
+                         false,
                          -7*unit, 7*unit,
                          -7*unit, 7*unit,
                          -7*unit, 7*unit,
@@ -81,7 +82,7 @@ public void setup() {
                          
   CellObj ball = new CellObj(
                          unit,
-                         new PVector(0, 0, 0),
+                         new PVector(2*unit, 0, 0),
                          1.0, 1.0, 1.0,
                          2.0, 2.0, 2.0,
                          -10.0, 10.0,
@@ -96,18 +97,19 @@ public void setup() {
                          1.0,
                          color(255),
                          'd',
-                         8.8541878188E-12, Double.valueOf(1), null
+                         8.8541878188E-12, Double.valueOf(20), null
                          );
   
-  //mainGrid.addObject(sphere);
+  
+  mainGrid.addObject(sphere);
   mainGrid.addObject(ball);
   mainGrid.drawObjects();
   
   mainGrid.solveSystem();
   
-  mainScreen2D.setMode('p');
+  mainScreen2D.setMode('c');
   mainScreen2D.updateMinMaxes();
-  mainScreen2D.updateBuffer(mainSlicer.getSlice('j', true, jRes/2));
+  mainScreen2D.updateBuffer(mainSlicer.getSlice('i', true, jRes/2));
   
  
   
@@ -133,7 +135,7 @@ void keyPressed() {
     case 'w':
       currSlice++;
       currSlice %= jRes;
-      mainScreen2D.updateBuffer(mainSlicer.getSlice('j', true, currSlice));
+      mainScreen2D.updateBuffer(mainSlicer.getSlice('i', true, currSlice));
       System.out.println(currSlice);
       break;
     case 's':
@@ -141,7 +143,7 @@ void keyPressed() {
       if (currSlice < 0) {
         currSlice = jRes-1;
       }
-      mainScreen2D.updateBuffer(mainSlicer.getSlice('j', true, currSlice));
+      mainScreen2D.updateBuffer(mainSlicer.getSlice('i', true, currSlice));
       System.out.println(currSlice);
       break;
     default:

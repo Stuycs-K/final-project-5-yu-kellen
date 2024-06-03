@@ -109,6 +109,7 @@ public class Grid3D {
             if (obj.inRange(x, y, z) && obj.satisfies(x, y, z)) {
               cell.setColor(obj.getColor());
               cell.setPerm(obj.getPerm());
+              cell.setObjStatus(true);
               switch (obj.getType()) {
                 /* conductor, set charges of the edges unknown, make voltage uniform */
                 case 'c':

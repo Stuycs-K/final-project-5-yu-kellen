@@ -11,6 +11,7 @@ public class Cell {
   private color colr;
   /* position of center */
   private PVector centerPos;
+  private boolean isObj;
   
   /* constructors */
   public Cell(Cell other) {
@@ -27,7 +28,7 @@ public class Cell {
     size = other.getSize();
     colr = other.getColor();
     perm = other.getPerm();
-    
+    isObj = false;
   }
   
   public Cell(PVector initCenterPos, float initSize) {
@@ -86,6 +87,10 @@ public class Cell {
     colr = newColor;
   }
   
+  public void setObjStatus(boolean newIsObj) {
+    isObj = newIsObj;
+  }
+  
   /* accessor methods */
   
   public PVector getEField() {
@@ -110,6 +115,10 @@ public class Cell {
   
   public color getColor() {
     return colr;
+  }
+  
+  public boolean isObj() {
+    return isObj;
   }
   
   public PVector getCenterPos() {

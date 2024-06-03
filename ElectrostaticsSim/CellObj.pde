@@ -153,9 +153,11 @@ public class CellObj {
                   ((abs(y - yEMin) < tol) || (abs(y - yEMax) < tol)) || 
                   ((abs(z - zEMin) < tol) || (abs(z - zEMax) < tol));
       }
+
       boolean onOuter = ((abs(x - xMin) < tol) || (abs(x - xMax) < tol)) ||
                         ((abs(y - yMin) < tol) || (abs(y - yMax) < tol)) || 
                         ((abs(z - zMin) < tol) || (abs(z - zMax) < tol));
+            System.out.println(onOuter);
       return (onInner || onOuter);
     }
   }

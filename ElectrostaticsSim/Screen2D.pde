@@ -11,8 +11,34 @@ public class Screen2D extends PApplet {
   private int screenRes;
   private int scale;
   
-  public final color voltageCHigh = color(204, 102, 0);
-  public final color voltageCLow = color(0, 102, 153);
+  public final float[][] colorScalePlasma = {
+    {13, 8, 135}, 
+    {74, 3, 168}, 
+    {125, 3, 168}, 
+    {168, 34, 150}, 
+    {203, 70, 121}, 
+    {227, 109, 90}, 
+    {248, 148, 65}, 
+    {252, 194, 52}, 
+    {249, 241, 78}
+  };
+  
+  public final float[][] colorScaleVirdis = {
+    {68, 1, 84}, 
+    {71, 44, 122}, 
+    {59, 81, 139}, 
+    {44, 113, 142}, 
+    {33, 144, 140}, 
+    {39, 173, 129}, 
+    {92, 200, 99}, 
+    {170, 220, 50}, 
+    {253, 231, 37}
+  };
+  
+  public final int colorRes = 256;
+  
+  public color[] potentialColors;
+  public color[] chargeColors;
   
   float minP; 
   float maxP;
@@ -56,6 +82,8 @@ public class Screen2D extends PApplet {
   public void setup() {
     surface.setTitle("Render Output");
     surface.setAlwaysOnTop(true);
+    potentialColors = createScaleColors(colorScalePlasma, colorRes);
+    chargeColors = createScaleColors(colorScaleVirdis, colorRes);
   }
   
   public void settings() {
@@ -66,6 +94,9 @@ public class Screen2D extends PApplet {
     float val;
     float ratio;
     color colorVal;
+    fill(color(0));
+    stroke(color(0));
+    rect(0, 0, width, height);
     if (buffer[0][0] != null) {
       for (int i=0; i<buffer.length; i++) {
         for (int j=0; j<buffer[i].length; j++) {  
@@ -76,19 +107,27 @@ public class Screen2D extends PApplet {
               break;
             case 'p':
               val = (float)buffer[i][j].getPotential().doubleValue();
-              ratio = abs(val-minP)/abs(maxP - minP);
-              colorVal = lerpColor(voltageCLow, voltageCHigh, ratio);
+              ratio = map(val, minP, maxP, 0, 1);
+              colorVal = potentialColors[int(ratio*(colorRes-1))];
               fill(colorVal);
               stroke(colorVal);
-              rect(i*scale, j*scale, scale, scale);
+              rect(
+                (i+(screenRes - buffer.length)/2)*scale, 
+                (j+(screenRes - buffer[i].length)/2)*scale, 
+                scale, scale
+                );
               break;
             case 'c':
               val = (float)buffer[i][j].getCharge().doubleValue();
-              ratio = abs(val)/abs(maxC);
-              colorVal = lerpColor(voltageCLow, voltageCHigh, ratio);
+              ratio = logNorm(val, minC, maxC);
+              colorVal = chargeColors[int(ratio*(colorRes-1))];
               fill(colorVal);
               stroke(colorVal);
-              rect(i*scale, j*scale, scale, scale);
+              rect(
+                (i+(screenRes - buffer.length)/2)*scale, 
+                (j+(screenRes - buffer[i].length)/2)*scale, 
+                scale, scale
+                );
               break;
             case 'e':
               break;
@@ -99,6 +138,8 @@ public class Screen2D extends PApplet {
       }
     }
   }
+  
+ 
   
   public void drawVectors() {
   }
@@ -138,11 +179,10 @@ public class Screen2D extends PApplet {
     
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
-        System.out.print(String.format("%3.2e, ", buffer[i][j].getPotential().doubleValue()));
+        System.out.print(String.format("%3.2e, ", buffer[i][j].getCharge().doubleValue()));
       }
       System.out.println();
     }
-    
     
     
   }
@@ -154,5 +194,40 @@ public class Screen2D extends PApplet {
     maxC = grid.getMaxSolvedCharge();
     System.out.println(String.format("P: %ev, %ev C: %ec, %ec", minP, maxP, minC, maxC));
   }
+  
+  color[] createScaleColors(float[][] colorVals, int res) {
+    color[] colors = new color[res];
+    for (int i = 0; i < res; i++) {
+      float t = map(i, 0, res-1, 0, 1);
+      colors[i] = lerpColor(colorVals, t);
+    }
+    return colors;
+  }
+
+  color lerpColor(float[][] colorArray, float t) {
+    int n = colorArray.length;
+    int index = int(t * (n - 1));
+    float weight = t * (n - 1) - index;
+    float[] c1 = colorArray[index];
+    float[] c2 = colorArray[min(index + 1, n - 1)];
+    int r = int(lerp(c1[0], c2[0], weight));
+    int g = int(lerp(c1[1], c2[1], weight));
+    int b = int(lerp(c1[2], c2[2], weight));
+    return color(r, g, b);
+  }
+  
+  private float logNorm(float value, float vmin, float vmax) {
+        if (vmin == 0 || vmax == 0 || vmin == vmax) {
+            vmax = 1;
+            vmin = -1;
+        }
+        
+        float scale = log(abs(vmax)/abs(vmin));
+        float sign = Math.signum(value);
+        float normalizedValue = (log(abs(value)/abs(vmin)))/ scale;
+        return sign * normalizedValue;
+    }
+  
+  
   
 }
