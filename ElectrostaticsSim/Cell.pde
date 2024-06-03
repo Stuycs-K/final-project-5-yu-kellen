@@ -11,8 +11,26 @@ public class Cell {
   private color colr;
   /* position of center */
   private PVector centerPos;
+  private boolean isObj;
   
   /* constructors */
+  public Cell(Cell other) {
+    if (other.getCharge() != null) {
+      charge = Double.valueOf(other.getCharge().doubleValue());
+    }
+    if (other.getPotential() != null) {
+      potential = Double.valueOf(other.getPotential().doubleValue());
+    }
+    if (other.getEField() != null) {
+      eField = eField = other.getEField().copy();
+    }
+    centerPos = other.getCenterPos().copy();
+    size = other.getSize();
+    colr = other.getColor();
+    perm = other.getPerm();
+    isObj = false;
+  }
+  
   public Cell(PVector initCenterPos, float initSize) {
     this(initCenterPos, initSize, color(255));
   }
@@ -65,8 +83,12 @@ public class Cell {
     centerPos.mult(scale);
   }
   
-  public void changeColor(color newColor) {
+  public void setColor(color newColor) {
     colr = newColor;
+  }
+  
+  public void setObjStatus(boolean newIsObj) {
+    isObj = newIsObj;
   }
   
   /* accessor methods */
@@ -93,6 +115,10 @@ public class Cell {
   
   public color getColor() {
     return colr;
+  }
+  
+  public boolean isObj() {
+    return isObj;
   }
   
   public PVector getCenterPos() {
