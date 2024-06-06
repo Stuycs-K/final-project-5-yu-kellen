@@ -106,70 +106,72 @@ public class Screen2D extends PApplet {
     rect(0, 0, width, height);
     if (buffer[0][0] != null) {
       for (int i=0; i<buffer.length; i++) {
-        for (int j=0; j<buffer[i].length; j++) {  
-          switch (renderMode) {
-            case 'v':
-              eField = buffer[i][j].getEField();
-              switch(sliceMode) {
-                case 'i':
-                  xDir = eField.y;
-                  yDir = eField.z;
-                  break;
-                case 'j':
-                  xDir = eField.x;
-                  yDir = eField.z;
-                  break;
-                case 'k':
-                  xDir = eField.x;
-                  yDir = eField.y;
-                  break;
-                
-              }
-              break;
-            case 'l':
-              break;
-            case 'p':
-              val = (float)buffer[i][j].getPotential().doubleValue();
-              ratio = map(val, minP, maxP, 0, 1);
-              ratio = pow(ratio, 0.5);
-              if (ratio > 1) {
-                ratio = 1;
-              }
-              if (ratio < 0) {
-                ratio = 0;
-              }
-              colorVal = potentialColors[int(ratio*(colorRes-1))];
-              fill(colorVal);
-              stroke(colorVal);
-              rect(
-                (i+(screenRes - buffer.length)/2)*scale, 
-                (j+(screenRes - buffer[i].length)/2)*scale, 
-                scale, scale
-                );
-              break;
-            case 'c':
-              val = (float)buffer[i][j].getCharge().doubleValue();
-              ratio = map(val, minC, maxC, 0, 1);
-              ratio = pow(ratio, 0.5);
-              if (ratio >= 1) {
-                ratio = 1;
-              }
-              if (ratio <= 0) {
-                ratio = 0;
-              }
-              colorVal = chargeColors[int(ratio*(colorRes-1))];
-              fill(colorVal);
-              stroke(colorVal);
-              rect(
-                (i+(screenRes - buffer.length)/2)*scale, 
-                (j+(screenRes - buffer[i].length)/2)*scale, 
-                scale, scale
-                );
-              break;
-            case 'e':
-              break;
-            default:
-              break;
+        for (int j=0; j<buffer[i].length; j++) {
+          if (!buffer[i][j].isObj()) {
+            switch (renderMode) {
+              case 'v':
+                eField = buffer[i][j].getEField();
+                switch(sliceMode) {
+                  case 'i':
+                    xDir = eField.y;
+                    yDir = eField.z;
+                    break;
+                  case 'j':
+                    xDir = eField.x;
+                    yDir = eField.z;
+                    break;
+                  case 'k':
+                    xDir = eField.x;
+                    yDir = eField.y;
+                    break;
+                  
+                }
+                break;
+              case 'l':
+                break;
+              case 'p':
+                val = (float)buffer[i][j].getPotential().doubleValue();
+                ratio = map(val, minP, maxP, 0, 1);
+                ratio = pow(ratio, 0.5);
+                if (ratio > 1) {
+                  ratio = 1;
+                }
+                if (ratio < 0) {
+                  ratio = 0;
+                }
+                colorVal = potentialColors[int(ratio*(colorRes-1))];
+                fill(colorVal);
+                stroke(colorVal);
+                rect(
+                  (i+(screenRes - buffer.length)/2)*scale, 
+                  (j+(screenRes - buffer[i].length)/2)*scale, 
+                  scale, scale
+                  );
+                break;
+              case 'c':
+                val = (float)buffer[i][j].getCharge().doubleValue();
+                ratio = map(val, minC, maxC, 0, 1);
+                ratio = pow(ratio, 0.5);
+                if (ratio >= 1) {
+                  ratio = 1;
+                }
+                if (ratio <= 0) {
+                  ratio = 0;
+                }
+                colorVal = chargeColors[int(ratio*(colorRes-1))];
+                fill(colorVal);
+                stroke(colorVal);
+                rect(
+                  (i+(screenRes - buffer.length)/2)*scale, 
+                  (j+(screenRes - buffer[i].length)/2)*scale, 
+                  scale, scale
+                  );
+                break;
+              case 'e':
+                break;
+              default:
+                break;
+            }
           }
         }
       }
@@ -217,15 +219,15 @@ public class Screen2D extends PApplet {
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
     
-    /*
+   /* 
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
-        System.out.print(String.format("%3.2e, ", buffer[i][j].getCharge().doubleValue()));
+        System.out.print(String.format("%3.2e, ", buffer[i][j].getPotential().doubleValue()));
       }
       System.out.println();
     }
-    */
     
+    */
   }
   
   public void updateMinMaxes() {

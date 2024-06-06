@@ -28,7 +28,7 @@ public class Cell {
     size = other.getSize();
     colr = other.getColor();
     perm = other.getPerm();
-    isObj = false;
+    isObj = other.isObj();
   }
   
   public Cell(PVector initCenterPos, float initSize) {
@@ -57,6 +57,7 @@ public class Cell {
     potential = initPotential;
     perm = initPerm;
     eField = initEField;
+    isObj = false;
   }
   
   /* modifier methods */
@@ -87,8 +88,8 @@ public class Cell {
     colr = newColor;
   }
   
-  public void setObjStatus(boolean newIsObj) {
-    isObj = newIsObj;
+  public void setObj(boolean newObj) {
+    isObj = newObj;
   }
   
   /* accessor methods */

@@ -107,13 +107,14 @@ public class Grid3D {
             if (obj.inRange(x, y, z) && obj.satisfies(x, y, z)) {
               cell.setColor(obj.getColor());
               cell.setPerm(obj.getPerm());
-              cell.setObjStatus(true);
+              cell.setObj(true);
               switch (obj.getType()) {
                 /* conductor, set charges of the edges unknown, make voltage uniform */
                 case 'c':
                   cell.setPotential(obj.getPotential());
                   cell.setCharge(Double.valueOf(0));
                   if (obj.onEdge(x, y, z)) {
+                    cell.setObj(false);
                     cell.setCharge(null);
                   }
                   break;
@@ -281,12 +282,13 @@ public class Grid3D {
   }
 
   public float getMaxSolvedPotential() {
-    float max = (float)getSolvedCell(0, 0, 0).getPotential().doubleValue();
+    float max = Float.MIN_VALUE;
     for (int i=0; i<iRes; i++) {
       for (int j=0; j<jRes; j++) {
         for (int k=0; k<kRes; k++) {
           float p = (float)getSolvedCell(i, j, k).getPotential().doubleValue();
-          if (p > max) {
+          boolean isObj = getSolvedCell(i, j, k).isObj();
+          if ((p > max) && (!isObj)) {
             max = p;
           }
         }
@@ -297,12 +299,13 @@ public class Grid3D {
 
 
   public float getMinSolvedPotential() {
-    float min = (float)getSolvedCell(0, 0, 0).getPotential().doubleValue();
+    float min = Float.MAX_VALUE;
     for (int i=0; i<iRes; i++) {
       for (int j=0; j<jRes; j++) {
         for (int k=0; k<kRes; k++) {
           float p = (float)getSolvedCell(i, j, k).getPotential().doubleValue();
-          if (p < min) {
+          boolean isObj = getSolvedCell(i, j, k).isObj();
+          if ((p < min) && (!isObj)) {
             min = p;
           }
         }
@@ -312,12 +315,13 @@ public class Grid3D {
   }
 
   public float getMaxSolvedCharge() {
-    float max = (float)getSolvedCell(0, 0, 0).getCharge().doubleValue();
+    float max = Float.MIN_VALUE;
     for (int i=0; i<iRes; i++) {
       for (int j=0; j<jRes; j++) {
         for (int k=0; k<kRes; k++) {
           float p = (float)getSolvedCell(i, j, k).getCharge().doubleValue();
-          if (p > max) {
+          boolean isObj = getSolvedCell(i, j, k).isObj();
+          if ((p > max) && (!isObj)) {
             max = p;
           }
         }
@@ -327,12 +331,13 @@ public class Grid3D {
   }
 
   public float getMinSolvedCharge() {
-    float min = (float)getSolvedCell(0, 0, 0).getCharge().doubleValue();
+    float min = Float.MAX_VALUE;
     for (int i=0; i<iRes; i++) {
       for (int j=0; j<jRes; j++) {
         for (int k=0; k<kRes; k++) {
           float p = (float)getSolvedCell(i, j, k).getCharge().doubleValue();
-          if (p < min) {
+          boolean isObj = getSolvedCell(i, j, k).isObj();
+          if ((p < min) && (!isObj)) {
             min = p;
           }
         }

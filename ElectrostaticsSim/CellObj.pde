@@ -122,7 +122,7 @@ public class CellObj {
     boolean xin = (x >= xMin) && (x <= xMax);
     boolean yin = (y >= yMin) && (y <= yMax);
     boolean zin = (z >= zMin) && (z <= zMax);
-    return (xin && yin && zin) && !inExclusive;
+    return (xin && yin && zin) && !(inExclusive);
   }
   
   public boolean satisfies(float x, float y, float z) {
@@ -135,30 +135,38 @@ public class CellObj {
     }
     return true;
   }
-
+  
   public boolean onEdge(float x, float y, float z) {
     float tol = size*1;
     if (isCircular) {
       float xVal = xCoeff*pow((x - pos.x), xPow);
       float yVal = yCoeff*pow((y - pos.y), yPow);
       float zVal = zCoeff*pow((z - pos.z), zPow);
-      boolean radMin = (abs(sqrt(xVal + yVal + zVal) - radiusMin) < tol);
+      boolean radMin = false;
+      if (radiusMin > 0) {
+        radMin = (abs(sqrt(xVal + yVal + zVal) - radiusMin) < tol);
+      }
       boolean radMax = (abs(sqrt(xVal + yVal + zVal) - radiusMax) < tol);
       return (radMin || radMax);
     }
     else {
       boolean onInner = false;
+      boolean inInnerRange = false;
       if (useExclusion) {
-        onInner = ((abs(x - xEMin) < tol) || (abs(x - xEMax) < tol)) || 
-                  ((abs(y - yEMin) < tol) || (abs(y - yEMax) < tol)) || 
-                  ((abs(z - zEMin) < tol) || (abs(z - zEMax) < tol));
+        boolean xEin = (x >= xEMin-size) && (x <= xEMax+size);
+        boolean yEin = (y >= yEMin-size) && (y <= yEMax+size);
+        boolean zEin = (z >= zEMin-size) && (z <= zEMax+size);
+        inInnerRange = (xEin && yEin && zEin);
+        onInner = ((abs(x - (xEMin-size)) < tol) || (abs(x - (xEMax+size)) < tol)) || 
+                  ((abs(y - (yEMin-size)) < tol) || (abs(y - (yEMax+size)) < tol)) || 
+                  ((abs(z - (zEMin-size)) < tol) || (abs(z - (zEMax+size)) < tol));
       }
 
       boolean onOuter = ((abs(x - xMin) < tol) || (abs(x - xMax) < tol)) ||
                         ((abs(y - yMin) < tol) || (abs(y - yMax) < tol)) || 
                         ((abs(z - zMin) < tol) || (abs(z - zMax) < tol));
                         
-      return (onInner || onOuter);
+      return ((onInner && inInnerRange) || onOuter);
     }
   }
   
