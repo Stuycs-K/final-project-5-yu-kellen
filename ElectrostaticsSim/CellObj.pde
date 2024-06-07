@@ -113,7 +113,7 @@ public class CellObj {
   
   public boolean inRange(float x, float y, float z) {
     boolean inExclusive = false;
-    if (useExclusion) {
+    if (useExclusion == true) {
       boolean xEin = (x >= xEMin) && (x <= xEMax);
       boolean yEin = (y >= yEMin) && (y <= yEMax);
       boolean zEin = (z >= zEMin) && (z <= zEMax);
@@ -126,7 +126,7 @@ public class CellObj {
   }
   
   public boolean satisfies(float x, float y, float z) {
-    if (isCircular) {
+    if (isCircular == true) {
       float xVal = xCoeff*pow((x - pos.x), xPow);
       float yVal = yCoeff*pow((y - pos.y), yPow);
       float zVal = zCoeff*pow((z - pos.z), zPow);
@@ -138,7 +138,7 @@ public class CellObj {
   
   public boolean onEdge(float x, float y, float z) {
     float tol = size*1;
-    if (isCircular) {
+    if (isCircular == true) {
       float xVal = xCoeff*pow((x - pos.x), xPow);
       float yVal = yCoeff*pow((y - pos.y), yPow);
       float zVal = zCoeff*pow((z - pos.z), zPow);
@@ -151,6 +151,7 @@ public class CellObj {
     }
     else {
       boolean onInner = false;
+<<<<<<< HEAD
       boolean inInnerRange = false;
       if (useExclusion) {
         boolean xEin = (x >= xEMin-size) && (x <= xEMax+size);
@@ -160,6 +161,12 @@ public class CellObj {
         onInner = ((abs(x - (xEMin-size)) < tol) || (abs(x - (xEMax+size)) < tol)) || 
                   ((abs(y - (yEMin-size)) < tol) || (abs(y - (yEMax+size)) < tol)) || 
                   ((abs(z - (zEMin-size)) < tol) || (abs(z - (zEMax+size)) < tol));
+=======
+      if (useExclusion == true) {
+        onInner = ((abs(x - xEMin) < tol) || (abs(x - xEMax) < tol)) || 
+                  ((abs(y - yEMin) < tol) || (abs(y - yEMax) < tol)) || 
+                  ((abs(z - zEMin) < tol) || (abs(z - zEMax) < tol));
+>>>>>>> 2cad6b59ac32e7d04b2e86674e4002a955d7b9fe
       }
 
       boolean onOuter = ((abs(x - xMin) < tol) || (abs(x - xMax) < tol)) ||

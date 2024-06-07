@@ -121,8 +121,8 @@ public class Interpreter {
             grid.addObject(new CellObj(
                            units,
                            new PVector(pX, pY, pZ),
-                           1.0, 1.0, 1.0,
-                           1.0, 1.0, 1.0,
+                           0.0, 0.0, 0.0,
+                           0.0, 0.0, 0.0,
                            (-sX/2)+pX, (sX/2)+pX,
                            (-sY/2)+pY, (sY/2)+pY,
                            (-sZ/2)+pZ, (sZ/2)+pZ,
