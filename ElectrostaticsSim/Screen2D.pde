@@ -44,6 +44,8 @@ public class Screen2D extends PApplet {
   float maxP;
   float minC;
   float maxC;
+  float minEMag;
+  float maxEMag;
   
   private Cell[][] buffer;
   private Grid3D grid;
@@ -97,10 +99,7 @@ public class Screen2D extends PApplet {
     float ratio;
     color colorVal;
     PVector eField;
-    float xDir;
-    float yDir;
-    int xPos;
-    int yPos;
+    PVector eField2D;
     fill(color(0));
     stroke(color(0));
     rect(0, 0, width, height);
@@ -110,35 +109,39 @@ public class Screen2D extends PApplet {
           if (!buffer[i][j].isObj()) {
             switch (renderMode) {
               case 'v':
+                push();
                 eField = buffer[i][j].getEField();
-                switch(sliceMode) {
+                switch (sliceMode) {
                   case 'i':
-                    xDir = eField.y;
-                    yDir = eField.z;
+                    eField2D = new PVector(eField.z, eField.y);
                     break;
                   case 'j':
-                    xDir = eField.x;
-                    yDir = eField.z;
+                    eField2D = new PVector(eField.x, eField.z);
                     break;
                   case 'k':
-                    xDir = eField.x;
-                    yDir = eField.y;
+                    eField2D = new PVector(eField.x, eField.y);
                     break;
-                  
+                  default:
+                     eField2D = new PVector(eField.x, eField.y);
+                    break;
                 }
+                translate((i+0.5)*scale, (j+0.5)*scale);
+                rotate(eField2D.heading());
+                fill(255);
+                stroke(255);
+                line(-(float)scale/2 + 2, 0, (float)scale/2 - 2, 0);
+                translate((float)scale/2 - 2, 0);
+                pop();
                 break;
               case 'l':
                 break;
               case 'p':
+                colorMode(RGB, 255);
                 val = (float)buffer[i][j].getPotential().doubleValue();
                 ratio = map(val, minP, maxP, 0, 1);
                 ratio = pow(ratio, 0.5);
-                if (ratio > 1) {
-                  ratio = 1;
-                }
-                if (ratio < 0) {
-                  ratio = 0;
-                }
+                if (ratio > 1) { ratio = 1; }
+                if (ratio < 0) { ratio = 0; }
                 colorVal = potentialColors[int(ratio*(colorRes-1))];
                 fill(colorVal);
                 stroke(colorVal);
@@ -149,15 +152,12 @@ public class Screen2D extends PApplet {
                   );
                 break;
               case 'c':
+                colorMode(RGB, 255);
                 val = (float)buffer[i][j].getCharge().doubleValue();
                 ratio = map(val, minC, maxC, 0, 1);
                 ratio = pow(ratio, 0.5);
-                if (ratio >= 1) {
-                  ratio = 1;
-                }
-                if (ratio <= 0) {
-                  ratio = 0;
-                }
+                if (ratio >= 1) { ratio = 1; }
+                if (ratio <= 0) { ratio = 0; }
                 colorVal = chargeColors[int(ratio*(colorRes-1))];
                 fill(colorVal);
                 stroke(colorVal);
@@ -235,6 +235,8 @@ public class Screen2D extends PApplet {
     maxP = grid.getMaxSolvedPotential();
     minC = grid.getMinSolvedCharge();
     maxC = grid.getMaxSolvedCharge();
+    minEMag = grid.getMinEMag();
+    maxEMag = grid.getMaxEMag();
     System.out.println(String.format("P: %ev, %ev C: %ec, %ec", minP, maxP, minC, maxC));
   }
   

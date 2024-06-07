@@ -345,6 +345,38 @@ public class Grid3D {
     }
     return min;
   }
+  
+  public float getMaxEMag() {
+    float max = Float.MIN_VALUE;
+     for (int i=0; i<iRes; i++) {
+      for (int j=0; j<jRes; j++) {
+        for (int k=0; k<kRes; k++) {
+          float u = getSolvedCell(i, j, k).getEField().mag();
+          boolean isObj = getSolvedCell(i, j, k).isObj();
+          if ((u > max) && (!isObj)) {
+            max = u;
+          }
+        }
+      }
+     }
+     return max;
+  }
+  
+  public float getMinEMag() {
+    float min = Float.MAX_VALUE;
+     for (int i=0; i<iRes; i++) {
+      for (int j=0; j<jRes; j++) {
+        for (int k=0; k<kRes; k++) {
+          float u = getSolvedCell(i, j, k).getEField().mag();
+          boolean isObj = getSolvedCell(i, j, k).isObj();
+          if ((u < min) && (!isObj)) {
+            min = u;
+          }
+        }
+      }
+     }
+     return min;
+  }
 
   public Cell getInitCell(int i, int j, int k) {
     return initGrid[i+1][j+1][k+1];
