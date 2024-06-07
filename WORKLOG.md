@@ -38,3 +38,4 @@ The most computationally expensive operation is solving the large system of equa
 For now I'm using the Jeigen linear algebra library. The grid's dimensions can be customized (not resitricted to a cube shape).
 Got rid of the SlicerUI, ObjectUI, and other Uis. To set up the simulation, I'm going to use a description language that the program
 will interpret. Worked on the Slicer and Screen2D classes. 
+
