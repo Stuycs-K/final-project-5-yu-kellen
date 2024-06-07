@@ -131,7 +131,7 @@ void controlEvent(ControlEvent event) {
     mainScreen2D.setSliceMode(sliceOptions);
     currentSlice = 0;
     mainUi.getController("currentSlice").setMin(0);
-    mainUi.getController("currentSlice").setMax((float)mainGrid.getRes(sliceOptions));
+    mainUi.getController("currentSlice").setMax((float)mainGrid.getRes(sliceOptions)-1);
     mainUi.getController("currentSlice").setBroadcast(true);
   }
   if (event.isFrom(renderButton) && (mainScreen2D != null)) {

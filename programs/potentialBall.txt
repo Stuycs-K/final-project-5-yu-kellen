@@ -1,6 +1,6 @@
 BEGIN 101 1 101 .000001 3
 MAT conductor 8.85418782E-12 c 0
 MAT posCharge 8.85418782E-12 d 20
-HBOX conductor 0 0 0 40 40 40 20
+HBOX conductor 0 0 0 40 40 40 4
 SPHERE posCharge 0 0 0 3
 SOLVE

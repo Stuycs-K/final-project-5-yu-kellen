@@ -166,7 +166,7 @@ public class CellObj {
                         ((abs(y - yMin) < tol) || (abs(y - yMax) < tol)) || 
                         ((abs(z - zMin) < tol) || (abs(z - zMax) < tol));
                         
-      return ((onInner && inInnerRange) || onOuter);
+      return ((onInner && inInnerRange) || (onOuter && !inInnerRange));
     }
   }
   

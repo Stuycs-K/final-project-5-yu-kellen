@@ -2,7 +2,7 @@ BEGIN 31 31 31 .001 10
 MAT posCharge 8.85418782E-12 d 100
 MAT negCharge 8.85418782E-12 d -100
 MAT neutral 8.85418782E-12 c 0
-BOX posCharge -15 0 0 1 50 50
-BOX negCharge 15 0 0 1 50 50
-HBOX neutral 0 0 0 12 12 12 4
+BOX posCharge -15 0 0 4 50 50
+BOX negCharge 15 0 0 4 50 50
+HBOX neutral 0 0 0 14 14 14 4
 SOLVE
