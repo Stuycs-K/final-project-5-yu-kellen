@@ -1,0 +1,4 @@
+BEGIN 50 5 50 .001 10
+MAT posCharge 8.85418782E-12 d 10
+POINT posCharge 0 0 0
+SOLVE

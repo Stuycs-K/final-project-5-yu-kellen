@@ -30,5 +30,12 @@ render/slicing menu done. Added my laptop to the workflow
 
 ### 5/30/2024
 
-I love linear algebra! seriously what the heck is going on...
+I love linear algebra! Experimenting with various linear algebra libraries.
+The most computationally expensive operation is solving the large system of equations needed. 
+
+### 5/31/2024
+
+For now I'm using the Jeigen linear algebra library. The grid's dimensions can be customized (not resitricted to a cube shape).
+Got rid of the SlicerUI, ObjectUI, and other Uis. To set up the simulation, I'm going to use a description language that the program
+will interpret. Worked on the Slicer and Screen2D classes. 
 
