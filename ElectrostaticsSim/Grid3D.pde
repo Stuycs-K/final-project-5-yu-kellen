@@ -112,16 +112,10 @@ public class Grid3D {
                 /* conductor, set charges of the edges unknown, make voltage uniform */
                 case 'c':
                   cell.setPotential(obj.getPotential());
-<<<<<<< HEAD
                   cell.setCharge(Double.valueOf(0));
                   if (obj.onEdge(x, y, z)) {
                     cell.setObj(false);
                     cell.setCharge(null);
-=======
-                  cell.setCharge(obj.getCharge());
-                  if (!obj.onEdge(x, y, z)) {
-                    cell.setCharge(Double.valueOf(0));
->>>>>>> 2cad6b59ac32e7d04b2e86674e4002a955d7b9fe
                   }
                   
                   break;
