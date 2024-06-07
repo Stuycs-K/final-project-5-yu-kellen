@@ -127,6 +127,7 @@ public class Screen2D extends PApplet {
                 }
                 translate((i+0.5)*scale, (j+0.5)*scale);
                 rotate(eField2D.heading());
+                System.out.println(eField2D.heading());
                 fill(255);
                 stroke(255);
                 line(-(float)scale/2 + 2, 0, (float)scale/2 - 2, 0);
@@ -219,15 +220,15 @@ public class Screen2D extends PApplet {
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
     
-   /* 
+   System.out.println();
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
-        System.out.print(String.format("%3.2e, ", buffer[i][j].getPotential().doubleValue()));
+        System.out.print(buffer[i][j].getEField() + ", ");
       }
       System.out.println();
     }
     
-    */
+    
   }
   
   public void updateMinMaxes() {

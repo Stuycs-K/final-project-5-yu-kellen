@@ -251,7 +251,7 @@ public class Grid3D {
                               2*solvedGrid[i][j][k].getPotential().doubleValue() +
                               solvedGrid[i][j][k+1].getPotential().doubleValue())/pow(size, 2);
                               
-          solvedGrid[i][j][k].setEField(new PVector(-dVx, -dVy, -dVz));
+          solvedGrid[i][j][k].setEField(new PVector(0, 1, 0));
         }
       }
     }
