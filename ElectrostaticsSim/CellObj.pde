@@ -151,7 +151,6 @@ public class CellObj {
     }
     else {
       boolean onInner = false;
-<<<<<<< HEAD
       boolean inInnerRange = false;
       if (useExclusion) {
         boolean xEin = (x >= xEMin-size) && (x <= xEMax+size);
@@ -161,12 +160,6 @@ public class CellObj {
         onInner = ((abs(x - (xEMin-size)) < tol) || (abs(x - (xEMax+size)) < tol)) || 
                   ((abs(y - (yEMin-size)) < tol) || (abs(y - (yEMax+size)) < tol)) || 
                   ((abs(z - (zEMin-size)) < tol) || (abs(z - (zEMax+size)) < tol));
-=======
-      if (useExclusion == true) {
-        onInner = ((abs(x - xEMin) < tol) || (abs(x - xEMax) < tol)) || 
-                  ((abs(y - yEMin) < tol) || (abs(y - yEMax) < tol)) || 
-                  ((abs(z - zEMin) < tol) || (abs(z - zEMax) < tol));
->>>>>>> 2cad6b59ac32e7d04b2e86674e4002a955d7b9fe
       }
 
       boolean onOuter = ((abs(x - xMin) < tol) || (abs(x - xMax) < tol)) ||
