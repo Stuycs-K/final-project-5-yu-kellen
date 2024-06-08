@@ -210,20 +210,63 @@ public class Screen2D extends PApplet {
             colorMode(RGB, 1);
             fill(1);
             stroke(0);
-            //rect(width-30, 40, 20, height-80); 
-            for (int i=0; i<colorRes; i++) {
+            rect(2, 40, 20, height-80); 
+            for (int i=0; i<=colorRes; i++) {
               ratio = map(i*((maxEMag-minEMag)/colorRes), minEMag, maxEMag, 0, 1);
               ratio = pow(ratio, 0.5);
               if (ratio > 1) { ratio = 1; }
               if (ratio < 0) { ratio = 0; }
               fill(ratio);
               stroke(ratio);
-              rect(width-28, 36+i*(height-84)/colorRes, 22, (height-84)/colorRes);
+              rect(4, 42+(colorRes-i)*(height-86)/colorRes, 16, (height-86)/colorRes);
+              if (i % 32 == 0) {
+                fill(1);
+                textSize(10);
+                text(String.format("%3.2e N/C", i*((maxEMag-minEMag)/colorRes)), 24, 42+(colorRes-i)*(height-86)/colorRes + 2);
+              }
             }
             break;
           case 'p':
+            colorMode(RGB, 255);
+            fill(0);
+            stroke(0);
+            rect(2, 40, 20, height-80); 
+            for (int i=0; i<=colorRes; i++) {
+              ratio = map(i*((maxP-minP)/colorRes)+minP, minP, maxP, 0, 1);
+              ratio = pow(ratio, 0.5);
+              if (ratio > 1) { ratio = 1; }
+              if (ratio < 0) { ratio = 0; }
+              colorVal = potentialColors[int(ratio*(colorRes-1))];
+              fill(colorVal);
+              stroke(colorVal);
+              rect(4, 42+(colorRes-i)*(height-86)/colorRes, 16, (height-86)/colorRes);
+              if (i % 32 == 0) {
+                fill(0);
+                textSize(10);
+                text(String.format("%3.2e V", i*((maxP-minP)/colorRes)+minP), 24, 42+(colorRes-i)*(height-86)/colorRes + 2);
+              }
+            }
             break;
           case 'c':
+            colorMode(RGB, 255);
+            fill(0);
+            stroke(0);
+            rect(2, 40, 20, height-80); 
+            for (int i=0; i<=colorRes; i++) {
+              ratio = map(i*((maxC-minC)/colorRes)+minC, minC, maxC, 0, 1);
+              ratio = pow(ratio, 0.5);
+              if (ratio > 1) { ratio = 1; }
+              if (ratio < 0) { ratio = 0; }
+              colorVal = chargeColors[int(ratio*(colorRes-1))];
+              fill(colorVal);
+              stroke(colorVal);
+              rect(4, 42+(colorRes-i)*(height-86)/colorRes, 16, (height-86)/colorRes);
+              if (i % 32 == 0) {
+                fill(0);
+                textSize(10);
+                text(String.format("%3.2e C", i*((maxC-minC)/colorRes)+minC), 24, 42+(colorRes-i)*(height-86)/colorRes + 2);
+              }
+            }
             break;
           default:
             break;
