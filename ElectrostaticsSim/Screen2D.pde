@@ -100,6 +100,7 @@ public class Screen2D extends PApplet {
     color colorVal;
     PVector eField;
     PVector eField2D;
+    float heading;
     fill(color(0));
     stroke(color(0));
     rect(0, 0, width, height);
@@ -109,6 +110,7 @@ public class Screen2D extends PApplet {
           if (!buffer[i][j].isObj()) {
             switch (renderMode) {
               case 'v':
+                colorMode(RGB, 1);
                 push();
                 eField = buffer[i][j].getEField();
                 switch (sliceMode) {
@@ -125,13 +127,23 @@ public class Screen2D extends PApplet {
                      eField2D = new PVector(eField.x, eField.y);
                     break;
                 }
-                translate((i+0.5)*scale, (j+0.5)*scale);
+                val = eField.mag();
+                
+                /* color */
+                ratio = map(val, minEMag, maxEMag, 0, 1);
+                ratio = pow(ratio, 0.5);
+                if (ratio > 1) { ratio = 1; }
+                if (ratio < 0) { ratio = 0; }
+                fill(ratio);
+                stroke(ratio);
+                
+                /* draw arrow */
+                translate((i+0.5+(screenRes - buffer.length)/2.0)*scale, (j+0.5+(screenRes - buffer[i].length)/2.0)*scale);
                 rotate(eField2D.heading());
-                System.out.println(eField2D.heading());
-                fill(255);
-                stroke(255);
-                line(-(float)scale/2 + 2, 0, (float)scale/2 - 2, 0);
-                translate((float)scale/2 - 2, 0);
+                line(-scale/2.0 + 2, 0, scale/2.0 - 2, 0);
+                translate(scale/2.0 - 2, 0);
+                line(0, 0, scale/4.0*cos(radians(150)), scale/4.0*sin(radians(150)));
+                line(0, 0, scale/4.0*cos(radians(150)), -scale/4.0*sin(radians(150)));
                 pop();
                 break;
               case 'l':
@@ -219,14 +231,19 @@ public class Screen2D extends PApplet {
   
   public void updateBuffer(Cell[][] newBuffer) {
     buffer = newBuffer;
-    
+   
+   /*
    System.out.println();
     for (int i=0; i<buffer.length; i++) {
       for (int j=0; j<buffer[i].length; j++) {
-        System.out.print(buffer[i][j].getEField() + ", ");
+        PVector eField = buffer[i][j].getEField().normalize();
+        float heading = atan2(eField.z, eField.x);
+        System.out.print(String.format("[%3.2f, %3.2f],", eField.x, eField.z));
       }
       System.out.println();
     }
+    */
+    
     
     
   }
@@ -238,7 +255,7 @@ public class Screen2D extends PApplet {
     maxC = grid.getMaxSolvedCharge();
     minEMag = grid.getMinEMag();
     maxEMag = grid.getMaxEMag();
-    System.out.println(String.format("P: %ev, %ev C: %ec, %ec", minP, maxP, minC, maxC));
+    System.out.println(String.format("P: %ev, %ev C: %ec, %ec E: %en/c, %en/c", minP, maxP, minC, maxC, minEMag, maxEMag));
   }
   
   color[] createScaleColors(float[][] colorVals, int res) {
