@@ -62,3 +62,11 @@ Fixing issues with generating geometries. Played around with representing vector
 ### 6/6/2024
 
 Most geometry generation issues worked out. Started vector field representation, vector fields not appearing to be correct, need to be verified.
+
+### 6/7/2024
+
+Fixed issues that arose with generating hollow boxes and spheres. Started working on rendering field vectors, can't quite find the problem.
+
+### 6/8/2024
+
+Fixed field vector issue, was taking the laplacian of the voltage instead of the gradient, a silly mistake. Finished rendering field vectors. Added a few more ggeometries (disc, ellipsoid, washer) and added a key (color to number scale thingy) Worked on prototype.
