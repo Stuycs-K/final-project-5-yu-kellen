@@ -53,6 +53,8 @@ public class Screen2D extends PApplet {
   private char renderMode;
   private char sliceMode;
   
+  private boolean showKey;
+  
  /*
   .addItem("Field Vectors", 'v')
                 .addItem("Field Lines", 'l')
@@ -79,6 +81,7 @@ public class Screen2D extends PApplet {
     screenRes = max(max(iRes, jRes), jRes);
     renderMode = 'p';
     sliceMode = 'j';
+    showKey = false;
     buffer = new Cell[screenRes][screenRes];
     PApplet.runSketch(new String[]{this.getClass().getName()}, this);
   }
@@ -104,108 +107,129 @@ public class Screen2D extends PApplet {
     fill(color(0));
     stroke(color(0));
     rect(0, 0, width, height);
-    if (buffer[0][0] != null) {
+    if (buffer != null) {
       for (int i=0; i<buffer.length; i++) {
         for (int j=0; j<buffer[i].length; j++) {
-          if (!buffer[i][j].isObj()) {
-            switch (renderMode) {
-              case 'v':
-                colorMode(RGB, 1);
-                push();
-                eField = buffer[i][j].getEField();
-                switch (sliceMode) {
-                  case 'i':
-                    eField2D = new PVector(eField.z, eField.y);
-                    break;
-                  case 'j':
-                    eField2D = new PVector(eField.x, eField.z);
-                    break;
-                  case 'k':
-                    eField2D = new PVector(eField.x, eField.y);
-                    break;
-                  default:
-                     eField2D = new PVector(eField.x, eField.y);
-                    break;
-                }
-                val = eField.mag();
-                
-                /* color */
-                ratio = map(val, minEMag, maxEMag, 0, 1);
-                ratio = pow(ratio, 0.5);
-                if (ratio > 1) { ratio = 1; }
-                if (ratio < 0) { ratio = 0; }
-                fill(ratio);
-                stroke(ratio);
-                
-                /* draw arrow */
-                translate((i+0.5+(screenRes - buffer.length)/2.0)*scale, (j+0.5+(screenRes - buffer[i].length)/2.0)*scale);
-                rotate(eField2D.heading());
-                line(-scale/2.0 + 2, 0, scale/2.0 - 2, 0);
-                translate(scale/2.0 - 2, 0);
-                line(0, 0, scale/4.0*cos(radians(150)), scale/4.0*sin(radians(150)));
-                line(0, 0, scale/4.0*cos(radians(150)), -scale/4.0*sin(radians(150)));
-                pop();
-                break;
-              case 'l':
-                break;
-              case 'p':
-                colorMode(RGB, 255);
-                val = (float)buffer[i][j].getPotential().doubleValue();
-                ratio = map(val, minP, maxP, 0, 1);
-                ratio = pow(ratio, 0.5);
-                if (ratio > 1) { ratio = 1; }
-                if (ratio < 0) { ratio = 0; }
-                colorVal = potentialColors[int(ratio*(colorRes-1))];
-                fill(colorVal);
-                stroke(colorVal);
-                rect(
-                  (i+(screenRes - buffer.length)/2)*scale, 
-                  (j+(screenRes - buffer[i].length)/2)*scale, 
-                  scale, scale
-                  );
-                break;
-              case 'c':
-                colorMode(RGB, 255);
-                val = (float)buffer[i][j].getCharge().doubleValue();
-                ratio = map(val, minC, maxC, 0, 1);
-                ratio = pow(ratio, 0.5);
-                if (ratio >= 1) { ratio = 1; }
-                if (ratio <= 0) { ratio = 0; }
-                colorVal = chargeColors[int(ratio*(colorRes-1))];
-                fill(colorVal);
-                stroke(colorVal);
-                rect(
-                  (i+(screenRes - buffer.length)/2)*scale, 
-                  (j+(screenRes - buffer[i].length)/2)*scale, 
-                  scale, scale
-                  );
-                break;
-              case 'e':
-                break;
-              default:
-                break;
+          if (buffer[i][j] != null) {
+            if (!buffer[i][j].isObj()) {
+              switch (renderMode) {
+                case 'v':
+                  colorMode(RGB, 1);
+                  push();
+                  eField = buffer[i][j].getEField();
+                  switch (sliceMode) {
+                    case 'i':
+                      eField2D = new PVector(eField.z, eField.y);
+                      break;
+                    case 'j':
+                      eField2D = new PVector(eField.x, eField.z);
+                      break;
+                    case 'k':
+                      eField2D = new PVector(eField.x, eField.y);
+                      break;
+                    default:
+                       eField2D = new PVector(eField.x, eField.y);
+                      break;
+                  }
+                  val = eField.mag();
+                  
+                  /* color */
+                  ratio = map(val, minEMag, maxEMag, 0, 1);
+                  ratio = pow(ratio, 0.5);
+                  if (ratio > 1) { ratio = 1; }
+                  if (ratio < 0) { ratio = 0; }
+                  fill(ratio);
+                  stroke(ratio);
+                  
+                  /* draw arrow */
+                  translate((i+0.5+(screenRes - buffer.length)/2.0)*scale, (j+0.5+(screenRes - buffer[i].length)/2.0)*scale);
+                  rotate(eField2D.heading());
+                  line(-scale/2.0 + 2, 0, scale/2.0 - 2, 0);
+                  translate(scale/2.0 - 2, 0);
+                  line(0, 0, scale/4.0*cos(radians(150)), scale/4.0*sin(radians(150)));
+                  line(0, 0, scale/4.0*cos(radians(150)), -scale/4.0*sin(radians(150)));
+                  pop();
+                  break;
+                case 'l':
+                  break;
+                case 'p':
+                  colorMode(RGB, 255);
+                  val = (float)buffer[i][j].getPotential().doubleValue();
+                  ratio = map(val, minP, maxP, 0, 1);
+                  ratio = pow(ratio, 0.5);
+                  if (ratio > 1) { ratio = 1; }
+                  if (ratio < 0) { ratio = 0; }
+                  colorVal = potentialColors[int(ratio*(colorRes-1))];
+                  fill(colorVal);
+                  stroke(colorVal);
+                  rect(
+                    (i+(screenRes - buffer.length)/2)*scale, 
+                    (j+(screenRes - buffer[i].length)/2)*scale, 
+                    scale, scale
+                    );
+                  break;
+                case 'c':
+                  colorMode(RGB, 255);
+                  val = (float)buffer[i][j].getCharge().doubleValue();
+                  ratio = map(val, minC, maxC, 0, 1);
+                  ratio = pow(ratio, 0.5);
+                  if (ratio >= 1) { ratio = 1; }
+                  if (ratio <= 0) { ratio = 0; }
+                  colorVal = chargeColors[int(ratio*(colorRes-1))];
+                  fill(colorVal);
+                  stroke(colorVal);
+                  rect(
+                    (i+(screenRes - buffer.length)/2)*scale, 
+                    (j+(screenRes - buffer[i].length)/2)*scale, 
+                    scale, scale
+                    );
+                  break;
+                case 'e':
+                  break;
+                default:
+                  break;
+              }
+            }
+            else {
+              fill(buffer[i][j].getColor());
+              stroke(buffer[i][j].getColor());
+              rect(
+                    (i+(screenRes - buffer.length)/2)*scale, 
+                    (j+(screenRes - buffer[i].length)/2)*scale, 
+                    scale, scale
+                    );
             }
           }
         }
       }
+      /* draw color scale */
+      if (showKey) {
+        
+        switch(renderMode) {
+          case 'v':
+            colorMode(RGB, 1);
+            fill(1);
+            stroke(0);
+            //rect(width-30, 40, 20, height-80); 
+            for (int i=0; i<colorRes; i++) {
+              ratio = map(i*((maxEMag-minEMag)/colorRes), minEMag, maxEMag, 0, 1);
+              ratio = pow(ratio, 0.5);
+              if (ratio > 1) { ratio = 1; }
+              if (ratio < 0) { ratio = 0; }
+              fill(ratio);
+              stroke(ratio);
+              rect(width-28, 36+i*(height-84)/colorRes, 22, (height-84)/colorRes);
+            }
+            break;
+          case 'p':
+            break;
+          case 'c':
+            break;
+          default:
+            break;
+        }
+      }
     }
-  }
-  
- 
-  
-  public void drawVectors() {
-  }
-  
-  public void drawFieldLines() {
-  }
-  
-  public void drawPotential() {
-  }
-  
-  public void drawCharge() {
-  }
-  
-  public void drawEquipotential() {
   }
   
   public void setNewRes(int newIRes, int newJRes, int newKRes) {
@@ -243,9 +267,11 @@ public class Screen2D extends PApplet {
       System.out.println();
     }
     */
-    
-    
-    
+
+  }
+  
+  public void setShowKey(boolean newShowKey) {
+    showKey = newShowKey;
   }
   
   public void updateMinMaxes() {

@@ -39,6 +39,7 @@ public class Interpreter {
       HashMap<String, Material> matMap = new HashMap<String, Material>();
       int iRes=0, jRes=0, kRes=0;
       int PPC=1;
+      boolean showKey=false;
       float units=1.0;
       Scanner scanner = new Scanner(program);
       if (!scanner.hasNext()) {
@@ -55,12 +56,17 @@ public class Interpreter {
             kRes = scanner.nextInt();
             units = scanner.nextFloat();
             PPC = scanner.nextInt();
+            showKey = scanner.nextBoolean();
             grid = new Grid3D(iRes, jRes, kRes, units);
             slicer = new Slicer(grid);
             break;
           }
           case "MAT": {
             String matName = scanner.next();
+            int rC = scanner.nextInt();
+            int gC = scanner.nextInt();
+            int bC = scanner.nextInt();
+            color colr = color(rC, gC, bC);
             float perm = scanner.nextFloat();
             char type = scanner.next().charAt(0);
             Double charge = null;
@@ -74,7 +80,7 @@ public class Interpreter {
               default:
                 break;
             }
-            Material mat = new Material(matName, perm, type, charge, potential);
+            Material mat = new Material(matName, perm, type, charge, potential, colr);
             matMap.put(matName, mat);
             System.out.println(matMap);
             break;
@@ -102,7 +108,7 @@ public class Interpreter {
                            false,
                            0.0, 0.0,
                            1.0,
-                           color(200),
+                           mat.getColor(),
                            mat.getType(),
                            mat.getPerm(), mat.getCharge(), mat.getPotential()
                            )
@@ -133,7 +139,7 @@ public class Interpreter {
                            false,
                            1.0, 1.0,
                            1.0,
-                           color(200),
+                           mat.getColor(),
                            mat.getType(),
                            mat.getPerm(), mat.getCharge(), mat.getPotential()
                            )
@@ -162,7 +168,7 @@ public class Interpreter {
                            true,
                            0.0, r,
                            2.0,
-                           color(200),
+                           mat.getColor(),
                            mat.getType(),
                            mat.getPerm(), mat.getCharge(), mat.getPotential()
                            )
@@ -191,7 +197,7 @@ public class Interpreter {
                            true,
                            r1, r2,
                            2.0,
-                           color(200),
+                           mat.getColor(),
                            mat.getType(),
                            mat.getPerm(), mat.getCharge(), mat.getPotential()
                            )
@@ -218,7 +224,7 @@ public class Interpreter {
                            false,
                            1.0, 1.0,
                            1.0,
-                           color(200),
+                           mat.getColor(),
                            mat.getType(),
                            mat.getPerm(), mat.getCharge(), mat.getPotential()
                            )
@@ -231,6 +237,7 @@ public class Interpreter {
             screen = new Screen2D(parent, grid, iRes, jRes, kRes, PPC);
             screen.updateMinMaxes();
             screen.updateBuffer(slicer.getSlice('j', true, 0));
+            screen.setShowKey(showKey);
             break;
           default:
             break;
