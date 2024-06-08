@@ -43,7 +43,8 @@ public class CellObj {
   private char type;
   /*
     c - conductor
-    d - whatever other things exist
+    d - dialectric
+    o - charged object
   */
   
 
@@ -131,7 +132,7 @@ public class CellObj {
       float yVal = yCoeff*pow((y - pos.y), yPow);
       float zVal = zCoeff*pow((z - pos.z), zPow);
       //System.out.println(sqrt(xVal + yVal + zVal) + ", " + radiusMin + ", " + radiusMax);
-      return ((sqrt(xVal + yVal + zVal) >= radiusMin) && (sqrt(xVal + yVal + zVal) <= radiusMax));
+      return (((xVal + yVal + zVal) >= pow(radiusMin, radiusPow)) && ((xVal + yVal + zVal) <= pow(radiusMax, radiusPow)));
     }
     return true;
   }
@@ -144,9 +145,9 @@ public class CellObj {
       float zVal = zCoeff*pow((z - pos.z), zPow);
       boolean radMin = false;
       if (radiusMin > 0) {
-        radMin = (abs(sqrt(xVal + yVal + zVal) - radiusMin) < tol);
+        radMin = (abs((xVal + yVal + zVal) - pow(radiusMin, radiusPow)) < tol);
       }
-      boolean radMax = (abs(sqrt(xVal + yVal + zVal) - radiusMax) < tol);
+      boolean radMax = (abs((xVal + yVal + zVal) - pow(radiusMax, radiusPow)) < tol);
       return (radMin || radMax);
     }
     else {

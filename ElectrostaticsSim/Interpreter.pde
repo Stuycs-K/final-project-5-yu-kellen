@@ -77,6 +77,7 @@ public class Interpreter {
                 break;
               case 'd':
                 charge = Double.valueOf(scanner.nextDouble());
+                break;
               default:
                 break;
             }
@@ -146,7 +147,71 @@ public class Interpreter {
                            );
             break;
           }
-
+          case "DISC": {
+            Material mat = matMap.get(scanner.next());
+            float pX = scanner.nextFloat()*units;
+            float pY = scanner.nextFloat()*units;
+            float pZ = scanner.nextFloat()*units;
+            char orient = scanner.next().charAt(0);
+            float r = scanner.nextFloat()*units;
+            float xRange = (orient == 'x') ? pX : iRes*units;
+            float yRange = (orient == 'y') ? pY : jRes*units;
+            float zRange = (orient == 'z') ? pZ : kRes*units;
+            grid.addObject(new CellObj(
+                           units,
+                           new PVector(pX, pY, pZ),
+                           1.0, 1.0, 1.0,
+                           2.0, 2.0, 2.0,
+                           -xRange, xRange,
+                           -yRange, yRange,
+                           -zRange, zRange,
+                           false,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           true,
+                           0.0, r,
+                           2.0,
+                           mat.getColor(),
+                           mat.getType(),
+                           mat.getPerm(), mat.getCharge(), mat.getPotential()
+                           )
+                           );
+            break;
+          }
+          case "WASHER": {
+            Material mat = matMap.get(scanner.next());
+            float pX = scanner.nextFloat()*units;
+            float pY = scanner.nextFloat()*units;
+            float pZ = scanner.nextFloat()*units;
+            char orient = scanner.next().charAt(0);
+            float r1 = scanner.nextFloat()*units;
+            float r2 = scanner.nextFloat()*units;
+            float xRange = (orient == 'x') ? pX : iRes*units;
+            float yRange = (orient == 'y') ? pY : jRes*units;
+            float zRange = (orient == 'z') ? pZ : kRes*units;
+            grid.addObject(new CellObj(
+                           units,
+                           new PVector(pX, pY, pZ),
+                           1.0, 1.0, 1.0,
+                           2.0, 2.0, 2.0,
+                           -xRange, xRange,
+                           -yRange, yRange,
+                           -zRange, zRange,
+                           false,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           true,
+                           r1, r2,
+                           2.0,
+                           mat.getColor(),
+                           mat.getType(),
+                           mat.getPerm(), mat.getCharge(), mat.getPotential()
+                           )
+                           );
+            break;
+          }
           case "SPHERE": {
             Material mat = matMap.get(scanner.next());
             float pX = scanner.nextFloat()*units;
@@ -157,6 +222,37 @@ public class Interpreter {
                            units,
                            new PVector(pX, pY, pZ),
                            1.0, 1.0, 1.0,
+                           2.0, 2.0, 2.0,
+                           -iRes*units, iRes*units,
+                           -jRes*units, jRes*units,
+                           -kRes*units, kRes*units,
+                           false,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           true,
+                           0.0, r,
+                           2.0,
+                           mat.getColor(),
+                           mat.getType(),
+                           mat.getPerm(), mat.getCharge(), mat.getPotential()
+                           )
+                           );
+            break;
+          }
+          case "ELLIPSOID": {
+            Material mat = matMap.get(scanner.next());
+            float pX = scanner.nextFloat()*units;
+            float pY = scanner.nextFloat()*units;
+            float pZ = scanner.nextFloat()*units;
+            float a = scanner.nextFloat();
+            float b = scanner.nextFloat();
+            float c = scanner.nextFloat();
+            float r = scanner.nextFloat()*units;
+            grid.addObject(new CellObj(
+                           units,
+                           new PVector(pX, pY, pZ),
+                           pow(1/a, 2), pow(1/b, 2), pow(1/c, 2),
                            2.0, 2.0, 2.0,
                            -iRes*units, iRes*units,
                            -jRes*units, jRes*units,
@@ -186,6 +282,38 @@ public class Interpreter {
                            units,
                            new PVector(pX, pY, pZ),
                            1.0, 1.0, 1.0,
+                           2.0, 2.0, 2.0,
+                           -iRes*units, iRes*units,
+                           -jRes*units, jRes*units,
+                           -kRes*units, kRes*units,
+                           false,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           1.0, 1.0,
+                           true,
+                           r1, r2,
+                           2.0,
+                           mat.getColor(),
+                           mat.getType(),
+                           mat.getPerm(), mat.getCharge(), mat.getPotential()
+                           )
+                           );
+            break;
+          }
+          case "HELLIPSOID": {
+            Material mat = matMap.get(scanner.next());
+            float pX = scanner.nextFloat()*units;
+            float pY = scanner.nextFloat()*units;
+            float pZ = scanner.nextFloat()*units;
+            float a = scanner.nextFloat();
+            float b = scanner.nextFloat();
+            float c = scanner.nextFloat();
+            float r1 = scanner.nextFloat()*units;
+            float r2 = scanner.nextFloat()*units;
+            grid.addObject(new CellObj(
+                           units,
+                           new PVector(pX, pY, pZ),
+                           pow(1/a, 2), pow(1/b, 2), pow(1/c, 2),
                            2.0, 2.0, 2.0,
                            -iRes*units, iRes*units,
                            -jRes*units, jRes*units,

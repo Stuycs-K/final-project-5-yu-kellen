@@ -117,7 +117,6 @@ public class Grid3D {
                     cell.setObj(false);
                     cell.setCharge(null);
                   }
-                  
                   break;
                 case 'd':
                   cell.setPotential(obj.getPotential());
@@ -137,7 +136,6 @@ public class Grid3D {
 
   /* solve Poisson's equations using FDM for p, V, and E */
   public void solveSystem() {
-    long start1 = System.nanoTime();
     int cubeRes = (iRes+2)*(jRes+2)*(kRes+2);
     solvedGrid = new Cell[iRes+2][jRes+2][kRes+2];
 
@@ -148,8 +146,6 @@ public class Grid3D {
 
     /* tracks if charge and potential are swapped */
     boolean[] swapTracker = new boolean[cubeRes];
-
-    long start2 = System.nanoTime();
 
     for (int i=0; i<iRes+2; i++) {
       for (int j=0; j<jRes+2; j++) {
@@ -171,8 +167,6 @@ public class Grid3D {
       }
     }
 
-    long end2 = System.nanoTime();
-    long start3 = System.nanoTime();
 
     /* init CoeffMatrix */
     for (int i=0; i<iRes+2; i++) {
@@ -206,15 +200,8 @@ public class Grid3D {
       }
     }
 
-    long end3 = System.nanoTime();
-
-    long start4 = System.nanoTime();
-
     /* solve! */
-    
     CommonOps_DSCC.solve(coeffMatrix, yVector, solnVector);
-
-    long end4 = System.nanoTime();
 
 
     /* update solved grid */
@@ -261,12 +248,6 @@ public class Grid3D {
       System.out.println();
     }
     */
-    long end1 = System.nanoTime();
-    System.out.println("T1: " + ((float)(end1 - start1))/pow(10, 9));
-    System.out.println("T2: " + ((float)(end2 - start2))/pow(10, 9));
-    System.out.println("T3: " + ((float)(end3 - start3))/pow(10, 9));
-    System.out.println("T4: " + ((float)(end4 - start4))/pow(10, 9));
-    System.out.println("DONE");
   }
 
 

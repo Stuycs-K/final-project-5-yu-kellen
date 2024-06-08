@@ -55,14 +55,6 @@ public class Screen2D extends PApplet {
   
   private boolean showKey;
   
- /*
-  .addItem("Field Vectors", 'v')
-                .addItem("Field Lines", 'l')
-                .addItem("Potential", 'p')
-                .addItem("Charge", 'c')
-                .addItem("Equipotential Lines", 'e');
-  */
-  
   /* constructors */
   public Screen2D(
     PApplet initParent,
@@ -202,9 +194,9 @@ public class Screen2D extends PApplet {
           }
         }
       }
+      
       /* draw color scale */
       if (showKey) {
-        
         switch(renderMode) {
           case 'v':
             colorMode(RGB, 1);
