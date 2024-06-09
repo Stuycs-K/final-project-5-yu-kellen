@@ -37,7 +37,7 @@ public class Cell {
   
   /* initializes it to be unknown */
   public Cell(PVector initCenterPos, float initSize, color initColr) {
-    this(initCenterPos, initSize, initColr, null, null, pVacuum, null);
+    this(initCenterPos, initSize, initColr, Double.valueOf(0), null, pVacuum, null);
   }
   
   public Cell(

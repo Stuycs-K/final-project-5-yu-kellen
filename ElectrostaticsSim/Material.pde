@@ -4,10 +4,12 @@ public class Material {
   private Double potential;
   private char type;
   private String name;
+  private color colr;
   
   public Material(
     String initName, float initPerm, 
-    char initType, Double initCharge, Double initPotential
+    char initType, Double initCharge, Double initPotential,
+    color initColr
     )
   {
     name = initName;
@@ -15,6 +17,7 @@ public class Material {
     perm = initPerm;
     charge = initCharge;
     potential = initPotential;
+    colr = initColr;
   }
   
   public float getPerm() {
@@ -35,5 +38,9 @@ public class Material {
   
   public String getName() {
     return name;
+  }
+  
+  public color getColor() {
+    return colr;
   }
 }

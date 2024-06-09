@@ -1,0 +1,6 @@
+BEGIN 31 31 31 0.0001 20 true
+MAT posCharge 240 240 0 8.85418782E-12 d 10
+MAT conductor 120 120 120 8.85418782E-12 c 0
+HBOX conductor 0 0 0 21 21 21 4
+POINT posCharge 0 0 0
+SOLVE

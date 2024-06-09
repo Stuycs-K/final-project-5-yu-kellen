@@ -1,4 +1,4 @@
 BEGIN 31 31 31 0.001 20 true
 MAT posCharge 240 240 0 8.85418782E-12 d 10
-HSPHERE posCharge 0 0 0 9 10
+HBOX posCharge 0 0 0 15 15 15 4
 SOLVE

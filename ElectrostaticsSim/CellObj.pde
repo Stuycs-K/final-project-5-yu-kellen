@@ -43,7 +43,7 @@ public class CellObj {
   private char type;
   /*
     c - conductor
-    d - whatever other things exist
+    d - other
   */
   
 
@@ -113,7 +113,7 @@ public class CellObj {
   
   public boolean inRange(float x, float y, float z) {
     boolean inExclusive = false;
-    if (useExclusion) {
+    if (useExclusion == true) {
       boolean xEin = (x >= xEMin) && (x <= xEMax);
       boolean yEin = (y >= yEMin) && (y <= yEMax);
       boolean zEin = (z >= zEMin) && (z <= zEMax);
@@ -126,27 +126,27 @@ public class CellObj {
   }
   
   public boolean satisfies(float x, float y, float z) {
-    if (isCircular) {
+    if (isCircular == true) {
       float xVal = xCoeff*pow((x - pos.x), xPow);
       float yVal = yCoeff*pow((y - pos.y), yPow);
       float zVal = zCoeff*pow((z - pos.z), zPow);
       //System.out.println(sqrt(xVal + yVal + zVal) + ", " + radiusMin + ", " + radiusMax);
-      return ((sqrt(xVal + yVal + zVal) >= radiusMin) && (sqrt(xVal + yVal + zVal) <= radiusMax));
+      return (((xVal + yVal + zVal) >= pow(radiusMin, radiusPow)) && ((xVal + yVal + zVal) <= pow(radiusMax, radiusPow)));
     }
     return true;
   }
   
   public boolean onEdge(float x, float y, float z) {
     float tol = size*1;
-    if (isCircular) {
+    if (isCircular == true) {
       float xVal = xCoeff*pow((x - pos.x), xPow);
       float yVal = yCoeff*pow((y - pos.y), yPow);
       float zVal = zCoeff*pow((z - pos.z), zPow);
       boolean radMin = false;
       if (radiusMin > 0) {
-        radMin = (abs(sqrt(xVal + yVal + zVal) - radiusMin) < tol);
+        radMin = (abs((xVal + yVal + zVal) - pow(radiusMin, radiusPow)) < tol);
       }
-      boolean radMax = (abs(sqrt(xVal + yVal + zVal) - radiusMax) < tol);
+      boolean radMax = (abs((xVal + yVal + zVal) - pow(radiusMax, radiusPow)) < tol);
       return (radMin || radMax);
     }
     else {
@@ -166,36 +166,12 @@ public class CellObj {
                         ((abs(y - yMin) < tol) || (abs(y - yMax) < tol)) || 
                         ((abs(z - zMin) < tol) || (abs(z - zMax) < tol));
                         
-      return ((onInner && inInnerRange) || onOuter);
+      return ((onInner && inInnerRange) || (onOuter && !inInnerRange));
     }
   }
   
   public char getType() {
     return type;
-  }
- 
-  public float getXMin() {
-    return xMin;
-  }
-  
-  public float getXMax() {
-    return xMax;
-  }
-  
-  public float getYMin() {
-    return yMin;
-  }
-  
-  public float getYMax() {
-    return yMax;
-  }
-  
-  public float getZMin() {
-    return zMin;
-  }
-  
-  public float getZMax() {
-    return zMax;
   }
   
   public float getPerm() {

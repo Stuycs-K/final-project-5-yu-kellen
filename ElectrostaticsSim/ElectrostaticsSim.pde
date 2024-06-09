@@ -20,22 +20,11 @@ char sliceOptions = 'j';
 int currentSlice = 0;
 int sliceMin=0, sliceMax=0;
 
-
-/* Default Fonts */
-HashMap<String, PFont> fontMap;
-
 public void setup() {
   size(400, 300);
   mainInterpreter = new Interpreter(this);
   mainUi = new ControlP5(this);
   surface.setAlwaysOnTop(true);
-  
-  /* init fonts */
-  fontMap = new HashMap<String, PFont>();
-  fontMap.put("h1", createFont("JetBrainsMono.ttf", 24, true));
-  fontMap.put("h2", createFont("JetBrainsMono.ttf", 20, true));
-  fontMap.put("h3", createFont("JetBrainsMono.ttf", 14, true));
-  fontMap.put("p", createFont("JetBrainsMono.ttf", 12, true));
   
   // Button to open file
   mainUi.addButton("openFile")
@@ -131,7 +120,7 @@ void controlEvent(ControlEvent event) {
     mainScreen2D.setSliceMode(sliceOptions);
     currentSlice = 0;
     mainUi.getController("currentSlice").setMin(0);
-    mainUi.getController("currentSlice").setMax((float)mainGrid.getRes(sliceOptions));
+    mainUi.getController("currentSlice").setMax((float)mainGrid.getRes(sliceOptions)-1);
     mainUi.getController("currentSlice").setBroadcast(true);
   }
   if (event.isFrom(renderButton) && (mainScreen2D != null)) {
