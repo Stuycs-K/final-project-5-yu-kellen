@@ -83,7 +83,7 @@ public class Interpreter {
             }
             Material mat = new Material(matName, perm, type, charge, potential, colr);
             matMap.put(matName, mat);
-            System.out.println(matMap);
+            //System.out.println(matMap);
             break;
           }
           case "BOX": {

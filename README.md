@@ -22,6 +22,9 @@ git clone git@github.com:Stuycs-K/final-project-5-yu-kellen.git
 ```
 Open the file ```ElectroStaticsSim.pde``` in Processing.
 <br>
+Make sure that the library ```ControlP5``` is installed. <br>
+[https://processing.org/reference/libraries/]
+<br>
 click ```Open File``` and open one of the many example programs in ```programs/``` or create your own! Once the file is opened, click ```run``` and wait for the simulation to open up a new window. Then using the UI, you can view different slices of the space and different aspects of it (Electric Field, Potential, Charge). 
 
 ### How to use the description language
@@ -60,15 +63,15 @@ ELLIPSOID MAT pX pY pZ A B C R
 HELLIPSOID MAT pX pY pZ A B C R1 R2
 POINT MAT pX pY pZ
 ```
-MAT is the name of a predefined material. <br>
-pX, pY, pZ is the center positon of the geometry. <br>
-sX, sY, sZ is the size of a geometry. <br>
-ORIENT is the orientation of a disc/washer. 'x' - faces the x direction, 'y' - faces the y direction, 'z'- faces the z direction. <br>
-T is the thickness of a hollow box's walls. <br>
-A, B, C is the coefficients for an ellipse (you have to know what this is first). <br>
-R is the radius of a sphere/ellipse. <br>
-R1 is the inner radius of a hollow sphere/ellipse. <br>
-R2 is the outer radius of a hollow sphere/ellipse. <br>
+MAT (String) is the name of a predefined material. <br>
+pX, pY, pZ (float) is the center positon of the geometry. <br>
+sX, sY, sZ (float) is the size of a geometry. <br>
+ORIENT (char) is the orientation of a disc/washer. 'x' - faces the x direction, 'y' - faces the y direction, 'z'- faces the z direction. <br>
+T (float) is the thickness of a hollow box's walls. <br>
+A, B, C (float) is the coefficients for an ellipse (you have to know what this is first). <br>
+R (float) is the radius of a sphere/ellipse. <br>
+R1 (float) is the inner radius of a hollow sphere/ellipse. <br>
+R2 (float) is the outer radius of a hollow sphere/ellipse. <br>
 
 Once you add your geometries, you must put ```SOLVE``` at the end of the program if you want it to run properly. <br>
 
@@ -84,6 +87,10 @@ SPHERE posCharge -7 0 0 4
 SPHERE negCharge  7 0 0 4
 SOLVE
 ```
+
+## Pictures!
+
+
 
 
 
