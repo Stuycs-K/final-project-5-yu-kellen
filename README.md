@@ -98,7 +98,8 @@ SOLVE
 ### Shielding effect of conductors
 ![App Screenshot](https://github.com/Stuycs-K/final-project-5-yu-kellen/blob/main/images/Shielding.png)
 
-
+## Known Bugs
+- Sometimes when running the program, the UI is missing the scrollbar or a part of the rendering window gets cut off. Just rerun the program.
 
 
 
