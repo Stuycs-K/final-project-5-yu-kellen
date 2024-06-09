@@ -11,6 +11,9 @@ A simple electrostatics simulator that uses the finite-difference method to appr
 <br>
 This runs entirely in Processing and only requires the installation of the ControlP5 library. 
 
+## Demo video
+[https://drive.google.com/file/d/1NrmOuE1uWnU_V-qh_FW8-WWLiKR7uOsx/view?usp=sharing] 
+
 ## Instructions on how to run
 Clone this repo from the main branch:
 ```bash
