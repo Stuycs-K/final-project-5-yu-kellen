@@ -7,7 +7,7 @@ Electrostatics Simulator
 **Members**: Kellen Yu
 
 ## Overview
-A simple electrostatics simulator that uses the finite-difference method to approximate solutions to Poisson's equation for electrostatics (laplace V = -ρ/ε). It is a 3D Simulation, but only a slice of the space is viewed at a time. The electric field vectors, potential field, and charge densities can be displayed. Users can set up the simulation using a custom-made description language that the program will interpret. This is a very computationaly expensive program, grid sizes bigger than 30x30x30 units take a significant amount of time to complete. 
+A simple electrostatics simulator that uses the finite-difference method to approximate solutions to Poisson's equation for electrostatics (laplace^2 V = -ρ/ε). It is a 3D Simulation, but only a slice of the space is viewed at a time. The electric field vectors, potential field, and charge densities can be displayed. Users can set up the simulation using a custom-made description language that the program will interpret. This is a very computationaly expensive program, grid sizes bigger than 30x30x30 units take a significant amount of time to complete. 
 <br>
 This runs entirely in Processing and only requires the installation of the ControlP5 library. 
 
