@@ -3,7 +3,7 @@
 Electrostatics Simulator
 
 ## Group Info
-**Group Name**: E (for the electric field)
+**Group Name**: E (for the electric field) <br>
 **Members**: Kellen Yu
 
 ## Overview
