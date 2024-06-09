@@ -43,8 +43,7 @@ public class CellObj {
   private char type;
   /*
     c - conductor
-    d - dialectric
-    o - charged object
+    d - other
   */
   
 
@@ -173,30 +172,6 @@ public class CellObj {
   
   public char getType() {
     return type;
-  }
- 
-  public float getXMin() {
-    return xMin;
-  }
-  
-  public float getXMax() {
-    return xMax;
-  }
-  
-  public float getYMin() {
-    return yMin;
-  }
-  
-  public float getYMax() {
-    return yMax;
-  }
-  
-  public float getZMin() {
-    return zMin;
-  }
-  
-  public float getZMax() {
-    return zMax;
   }
   
   public float getPerm() {

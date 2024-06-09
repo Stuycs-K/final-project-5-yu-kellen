@@ -252,7 +252,7 @@ public class Grid3D {
 
 
 
-  public int getIndex(int i, int j, int k) {
+  private int getIndex(int i, int j, int k) {
     return i + (iRes+2)*j + (iRes+2)*(jRes+2)*k;
   }
 
@@ -373,6 +373,7 @@ public class Grid3D {
         return 0;
     }
   }
+  
   public int getIRes() {
     return iRes;
   }

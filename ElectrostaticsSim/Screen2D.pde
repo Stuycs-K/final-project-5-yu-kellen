@@ -11,7 +11,7 @@ public class Screen2D extends PApplet {
   private int screenRes;
   private int scale;
   
-  public final float[][] colorScalePlasma = {
+  private final float[][] colorScalePlasma = {
     {13, 8, 135}, 
     {74, 3, 168}, 
     {125, 3, 168}, 
@@ -23,7 +23,7 @@ public class Screen2D extends PApplet {
     {249, 241, 78}
   };
   
-  public final float[][] colorScaleVirdis = {
+  private final float[][] colorScaleVirdis = {
     {68, 1, 84}, 
     {71, 44, 122}, 
     {59, 81, 139}, 
@@ -35,17 +35,17 @@ public class Screen2D extends PApplet {
     {253, 231, 37}
   };
   
-  public final int colorRes = 256;
+  private final int colorRes = 256;
   
   public color[] potentialColors;
   public color[] chargeColors;
   
-  float minP; 
-  float maxP;
-  float minC;
-  float maxC;
-  float minEMag;
-  float maxEMag;
+  private float minP; 
+  private float maxP;
+  private float minC;
+  private float maxC;
+  private float minEMag;
+  private float maxEMag;
   
   private Cell[][] buffer;
   private Grid3D grid;
