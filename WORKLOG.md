@@ -70,3 +70,7 @@ Fixed issues that arose with generating hollow boxes and spheres. Started workin
 ### 6/8/2024
 
 Fixed field vector issue, was taking the laplacian of the voltage instead of the gradient, a silly mistake. Finished rendering field vectors. Added a few more ggeometries (disc, ellipsoid, washer) and added a key (color to number scale thingy) Worked on prototype.
+
+### 6/9/2024
+
+Made video, worked more on Readme. finished prototype. cleaned up code, got rid of unused methods, debug print statements. project is over.
